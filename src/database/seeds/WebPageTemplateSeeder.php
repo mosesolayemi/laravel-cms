@@ -335,11 +335,14 @@ class WebPageTemplateSeeder extends Seeder
                 'layout'           => 'home.blade.php',
                 'meta_title'       => 'Blog | Medical Solutions',
                 'meta_description' => 'News and insights from the Medical Solutions team.',
-                'parent'           => 0,
+                'menu_title'       => null,
+                'footer_title'     => null,
+                'parent_url'       => null,
                 'category'         => 1,
                 'header_position'  => 1,
-                'footer_position'  => 1,
+                'footer_position'  => 'links',
                 'page_order'       => 24,
+                'footer_order'     => 24,
                 'status'           => 1,
             ],
             [
@@ -524,7 +527,8 @@ class WebPageTemplateSeeder extends Seeder
         $ids = Templates::pluck('id', 'url');
 
         foreach ($pages as $page) {
-            $parent = $page['parent_url'] ? ($ids[$page['parent_url']] ?? 0) : 0;
+            $parentUrl = $page['parent_url'] ?? null;
+            $parent = $parentUrl ? ($ids[$parentUrl] ?? 0) : 0;
 
             Templates::where('url', $page['url'])->update(['parent' => $parent]);
         }
