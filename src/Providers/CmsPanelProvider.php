@@ -50,6 +50,7 @@ class CmsPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 'Content',
+                'Gallery',
                 'Blog',
                 'Insights',
                 'Settings',
@@ -64,12 +65,17 @@ class CmsPanelProvider extends PanelProvider
                 EnquiryResource::class,
                 PageVisitResource::class,
                 AdminResource::class,
+                // Screens for content that belongs to the host site rather
+                // than to the CMS itself.
+                ...config('cms.panel.resources', []),
             ])
             ->pages([
                 Dashboard::class,
+                ...config('cms.panel.pages', []),
             ])
             ->widgets([
                 CmsOverview::class,
+                ...config('cms.panel.widgets', []),
             ])
             ->middleware([
                 EncryptCookies::class,

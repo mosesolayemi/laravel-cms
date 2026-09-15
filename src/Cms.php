@@ -6,6 +6,8 @@ use Cms\Models\Blogs\Blogs;
 use Cms\Models\Blogs\Category;
 use Cms\Models\Pages\PageVisit;
 use Cms\Models\Pages\Templates;
+use Cms\Models\Settings\Setting;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -35,46 +37,102 @@ class Cms
     }
 
     /**
-     * The header menu, as a nested tree three levels deep.
+     * The header menu: top level pages flagged for the header, each with its
+     * children nested underneath.
+     *
+     * @return array<int, Templates>
      */
     public function menu(): array
     {
-        return $this->menuTree(['header_position' => 1]);
-    }
-
-    public function footerMenu(): array
-    {
-        return $this->menuTree(['footer_position' => 1]);
+        return $this->tree(fn ($query) => $query->where('header_position', 1));
     }
 
     /**
-     * Build the menu tree for a set of column filters.
+     * The footer's link columns, keyed by column.
      *
-     * Three queries deep rather than recursive, matching the depth the theme
-     * renders; children are attached as `children` on each node.
+     * `footer_position` names which column a page belongs in rather than being
+     * a plain yes/no, because the footer has two lists side by side.
+     *
+     * @return array<string, array<int, Templates>>
      */
-    protected function menuTree(array $filter): array
+    public function footerMenu(): array
     {
-        $query = fn (int $parent): Collection => Templates::query()
-            ->where($filter)
+        $pages = Templates::query()
             ->where('status', self::PUBLISHED)
-            ->where('parent', $parent)
+            ->whereNotNull('footer_position')
+            ->whereNotIn('footer_position', ['', '0', self::FOOTER_NONE])
+            ->orderBy('footer_order')
             ->orderBy('page_order')
             ->get();
 
-        $roots = $query(0);
+        return $pages->groupBy('footer_position')
+            ->map(fn ($group) => $group->values()->all())
+            ->all();
+    }
 
-        foreach ($roots as $root) {
-            $children = $query($root->id);
+    public const FOOTER_NONE = 'none';
 
-            foreach ($children as $child) {
-                $child->children = $query($child->id);
-            }
+    /**
+     * The columns a page can be placed in, for the panel's select.
+     *
+     * @return array<string, string>
+     */
+    public static function footerColumns(): array
+    {
+        return [
+            self::FOOTER_NONE => 'Not shown',
+            'services' => 'Services column',
+            'links' => 'Useful links column',
+        ];
+    }
 
-            $root->children = $children;
+    /**
+     * Build a menu tree.
+     *
+     * Nesting comes from `parent`, which is explicit and editable: the header
+     * groups pages that are not related by URL at all — "About Us" holds
+     * /clinical-standards and /team, neither of which sits under /about.
+     *
+     * @return array<int, Templates>
+     */
+    protected function tree(callable $filter, int $parent = 0, int $depth = 0): array
+    {
+        // Three levels is what the theme renders; the guard also stops a
+        // parent loop in the data from recursing forever.
+        if ($depth > 2) {
+            return [];
         }
 
-        return $roots->all();
+        $pages = Templates::query()
+            ->where('status', self::PUBLISHED)
+            ->where('parent', $parent)
+            ->tap($filter)
+            ->orderBy('page_order')
+            ->get();
+
+        foreach ($pages as $page) {
+            $page->setRelation('children', collect(
+                $this->tree($filter, $page->getKey(), $depth + 1)
+            ));
+        }
+
+        return $pages->all();
+    }
+
+    /**
+     * An editable piece of site chrome — footer wording, contact details.
+     */
+    public function setting(string $key, mixed $default = null): mixed
+    {
+        return Setting::get($key, $default);
+    }
+
+    /**
+     * @param  array<string, mixed>  $values
+     */
+    public function putSettings(array $values): void
+    {
+        Setting::put($values);
     }
 
     public function blogs(): Collection
@@ -82,6 +140,32 @@ class Cms
         return Blogs::query()
             ->where('status', self::PUBLISHED)
             ->latest()
+            ->get();
+    }
+
+    /**
+     * A page of published posts, newest first, optionally within a category.
+     */
+    public function blogsPage(int|string|null $categoryId = null, int $perPage = 9): LengthAwarePaginator
+    {
+        return Blogs::query()
+            ->with('category')
+            ->where('status', self::PUBLISHED)
+            ->when($categoryId, fn ($query) => $query->where('category_id', $categoryId))
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+    }
+
+    /**
+     * The few most recent posts, for the footer.
+     */
+    public function recentBlogs(int $limit = 2): Collection
+    {
+        return Blogs::query()
+            ->where('status', self::PUBLISHED)
+            ->latest()
+            ->limit($limit)
             ->get();
     }
 

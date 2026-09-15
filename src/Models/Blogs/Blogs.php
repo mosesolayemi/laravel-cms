@@ -27,6 +27,29 @@ class Blogs extends Model
         'status',
     ];
 
+    /**
+     * The public URL for this post.
+     *
+     * The date and slug are decorative — posts are looked up by id — but they
+     * make the link readable and shareable.
+     */
+    public function link(): string
+    {
+        return url(sprintf(
+            '/blogs/%s/%s/%s',
+            $this->getKey(),
+            optional($this->created_at)->format('Y-m-d') ?: now()->format('Y-m-d'),
+            $this->url ?: 'post',
+        ));
+    }
+
+    public function coverUrl(): ?string
+    {
+        return $this->cover
+            ? \Illuminate\Support\Facades\Storage::disk(config('cms.media.disk', 'public'))->url($this->cover)
+            : null;
+    }
+
     public function category(){
         return $this->belongsTo('Cms\Models\Blogs\Category', 'category_id', 'id');
     }

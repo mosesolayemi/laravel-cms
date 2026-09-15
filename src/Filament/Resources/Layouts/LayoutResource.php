@@ -21,7 +21,16 @@ use Filament\Tables\Table;
 use UnitEnum;
 
 /**
- * Layouts are a short, flat list, so they are managed on a single page.
+ * Layouts map a page onto a Blade file — in principle.
+ *
+ * Hidden from the navigation because nothing currently reads it: every page
+ * points at the same row, and PageController renders by URL slug instead
+ * (`web.pages.{url}`). Leaving it in the sidebar presents a setting that
+ * cannot change anything, which is worse than not offering it.
+ *
+ * It becomes meaningful once pages are assembled from CMS blocks rather than
+ * a bespoke Blade file each; the resource is kept, and reachable by URL, for
+ * that. See Cms\\Filament\\Resources\\Pages for what does drive rendering.
  */
 class LayoutResource extends Resource
 {
@@ -34,6 +43,8 @@ class LayoutResource extends Resource
     protected static ?string $recordTitleAttribute = 'label';
 
     protected static ?int $navigationSort = 30;
+
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Schema $schema): Schema
     {

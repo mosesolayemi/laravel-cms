@@ -48,6 +48,60 @@ src/
 
 The panel is served from `/admin`; change it with `CMS_PANEL_PATH` in `.env`.
 
+## Adding the host site's own screens
+
+The CMS ships the structural screens — pages, blocks, layouts, administrators.
+Content that belongs to one particular site does **not** live in this package:
+its migration, models and Filament resources live in the application, and are
+plugged into the panel from the host's `config/cms.php`:
+
+```php
+// config/cms.php in the host app
+return [
+    'panel' => [
+        'resources' => [
+            App\Filament\Resources\GalleryImages\GalleryImageResource::class,
+        ],
+    ],
+];
+```
+
+`pages` and `widgets` work the same way. The package's own defaults are merged
+*beneath* the host's config at any depth, so overriding one nested key does not
+drop its siblings.
+
+## Image processing
+
+`Cms\Media\ImageProcessor` crops and re-encodes uploads to named presets, so a
+page only ever receives images of the shape it was designed for. Presets are
+defined in `config/cms.php`:
+
+```php
+'images' => [
+    'driver' => env('IMAGE_DRIVER', 'gd'),  // gd | imagick
+    'format' => 'webp',
+    'quality' => 82,
+    'presets' => [
+        'gallery' => ['width' => 1140, 'height' => 832],
+    ],
+],
+```
+
+Use it from a Filament `FileUpload` so the file is processed before it is
+stored:
+
+```php
+FileUpload::make('path')
+    ->image()
+    ->disk(config('cms.media.disk'))
+    ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file) => app(ImageProcessor::class)
+        ->store($file->getRealPath(), 'gallery', 'images/gallery'));
+```
+
+Uploads are cover-cropped from the centre — never stretched — and `orient()` is
+applied first, so portrait photographs from phones (which record their rotation
+in EXIF rather than in the pixels) do not come out sideways.
+
 ## Administrators
 
 Panel access runs on the `admin` guard against the `admins` table, registered
