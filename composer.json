@@ -11,7 +11,10 @@
     "autoload": {
         "psr-4": {
             "Cms\\": "src/"
-        }
+        },
+        "classmap": [
+            "src/database/seeds"
+        ]
     },
     "extra": {
         "laravel": {

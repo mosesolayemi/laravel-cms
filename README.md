@@ -26,7 +26,9 @@ src/
     Resources/             one directory per resource
     Support/CmsFields.php  shared form fields for the legacy integer columns
     Widgets/
-  database/migrations/
+  database/
+    migrations/
+    seeds/                 pages, layouts and menu placement
   config/cms.php
 ```
 
@@ -101,6 +103,54 @@ FileUpload::make('path')
 Uploads are cover-cropped from the centre — never stretched — and `orient()` is
 applied first, so portrait photographs from phones (which record their rotation
 in EXIF rather than in the pixels) do not come out sideways.
+
+## Seeding
+
+A seeder lives wherever its table's migration lives. The CMS owns
+`web_page_layouts` and `web_page_templates`, so seeding pages, layouts and
+menu placement is this package's job:
+
+```
+packages/cms/src/database/seeds/
+  CmsDatabaseSeeder.php      calls the three below, in order
+  WebPageLayoutSeeder.php    layouts -> blade files
+  WebPageTemplateSeeder.php  the pages themselves
+  MenuSeeder.php             which pages appear in which menu, and where
+```
+
+They are classmap autoloaded, matching the host's own `database/seeds`, so the
+host adds the folder to composer.json alongside its own:
+
+```json
+"classmap": [
+    "database/seeds",
+    "database/factories",
+    "packages/cms/src/database/seeds"
+]
+```
+
+The host then calls one seeder:
+
+```php
+// database/seeds/DatabaseSeeder.php
+$this->call(CmsDatabaseSeeder::class);
+```
+
+Or run one directly:
+
+```
+php artisan db:seed --class='\MenuSeeder'
+```
+
+Note the leading backslash — Laravel prefixes a `--class` containing no
+backslash with `Database\Seeders\`, which is not where these live.
+
+Anything whose migration is in the host application — this site's gallery, for
+instance — is seeded from the host's own `database/seeds`.
+
+Each seeder checks what it needs before it runs and says what is missing:
+MenuSeeder names any page it could not place rather than quietly leaving a
+link out of the menu.
 
 ## Administrators
 
