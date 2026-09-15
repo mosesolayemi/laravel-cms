@@ -13,6 +13,7 @@ into the host's `config/auth.php`, routes or controllers.
 src/
   Cms.php                  read API used by the public site
   Facades/Cms.php          Cms:: facade over the above
+  helpers.php              global functions for Blade (setting(), pagedata()…)
   CmsServiceProvider.php   migrations, config, admin guard, console commands
   Providers/
     CmsPanelProvider.php   the Filament panel; lists every resource explicitly
@@ -175,13 +176,37 @@ The site never touches the CMS models directly — it goes through the read API:
 use Cms\Facades\Cms;
 
 Cms::page('about-us');       // a page with its groups and layout
-Cms::menu();                 // header menu tree, three levels deep
-Cms::footerMenu();
+Cms::menu();                 // header menu tree
+Cms::footerMenu();           // footer link columns
 Cms::blogs();                // published posts
-Cms::blogsInCategory($id);
+Cms::blogsPage($categoryId); // a paginated page of posts
+Cms::recentBlogs(2);
 Cms::categories();
+Cms::setting('footer.email', $default);
 Cms::recordVisit($url);
 ```
+
+### In Blade
+
+`src/helpers.php` is loaded by composer's `files` autoloader, so templates get
+plain functions without importing anything:
+
+```blade
+{{ setting('footer.email', 'info@example.com') }}
+@foreach (menu() as $item) ... @endforeach
+@foreach (footer_menu()['links'] ?? [] as $link) ... @endforeach
+{{ cms_image($element->value, 'assets/img/fallback.jpg') }}
+```
+
+A host installing the package by path should add the file to its own
+composer.json, since the root package's `files` are the ones that load:
+
+```json
+"autoload": { "files": ["packages/cms/src/helpers.php"] }
+```
+
+Every helper is wrapped in `function_exists`, so an application that already
+defines one of these names keeps its own.
 
 ## Content model
 

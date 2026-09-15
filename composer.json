@@ -14,6 +14,9 @@
         },
         "classmap": [
             "src/database/seeds"
+        ],
+        "files": [
+            "src/helpers.php"
         ]
     },
     "extra": {
