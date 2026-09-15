@@ -27,7 +27,7 @@ class CmsDatabaseSeeder extends Seeder
     protected array $seeders = [
         WebPageLayoutSeeder::class,
         WebPageTemplateSeeder::class,
-        MenuSeeder::class,
+        MenuSeeder::class, // u can comment this out if u are reusing this module in anothe project and u dont want it in the project.... t for thanks
     ];
 
     public function run(): void
