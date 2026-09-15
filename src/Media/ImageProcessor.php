@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Interfaces\EncoderInterface;
-use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Encoders\AvifEncoder;
 use Intervention\Image\Encoders\JpegEncoder;
 use Intervention\Image\Encoders\PngEncoder;
@@ -38,22 +37,6 @@ class ImageProcessor
     }
 
     /**
-     * Read a file off disk.
-     *
-     * intervention/image v4 renamed read() to decodePath(). v4 needs PHP 8.3
-     * while composer.json still allows 8.2, so either line can be installed —
-     * ask the manager which it understands rather than pinning the call to one.
-     */
-    protected function decode(string $source): ImageInterface
-    {
-        $manager = $this->manager();
-
-        return method_exists($manager, 'decodePath')
-            ? $manager->decodePath($source)
-            : $manager->read($source);
-    }
-
-    /**
      * Swap in a pre-configured manager, for tests or a custom driver.
      */
     public function usingManager(ImageManager $manager): static
@@ -75,7 +58,8 @@ class ImageProcessor
     {
         [$width, $height] = $this->preset($preset);
 
-        $encoded = (string) $this->decode($source)
+        $encoded = (string) $this->manager()
+            ->decodePath($source)
             // Phones record orientation in EXIF rather than rotating the
             // pixels, so without this a portrait photo crops sideways.
             ->orient()
