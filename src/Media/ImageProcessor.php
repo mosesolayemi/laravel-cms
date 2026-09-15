@@ -59,7 +59,7 @@ class ImageProcessor
         [$width, $height] = $this->preset($preset);
 
         $encoded = (string) $this->manager()
-            ->read($source)
+            ->decodePath($source)
             // Phones record orientation in EXIF rather than rotating the
             // pixels, so without this a portrait photo crops sideways.
             ->orient()
