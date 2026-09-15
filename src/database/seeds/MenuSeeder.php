@@ -41,6 +41,7 @@ class MenuSeeder extends Seeder
         ]],
         'why-choose-us' => [null, []],
         'gallery' => [null, []],
+        'blogs' => [null, []],
         'contact' => [null, []],
     ];
 

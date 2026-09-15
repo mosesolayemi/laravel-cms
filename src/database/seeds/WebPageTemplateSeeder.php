@@ -7,9 +7,13 @@ use Cms\Models\Pages\Templates;
 /**
  * Pages served by App\Http\Controllers\Web\PageController.
  *
- * `url` is the lookup key (TemplatesService::loadPage) *and* the blade that
- * gets rendered — WebController::get_view() resolves view("web.pages.{$url}").
- * So a row's url must match a file at resources/views/web/pages/{url}.blade.php.
+ * `url` is the lookup key *and* the blade that gets rendered — PageController
+ * resolves view("web.pages.{$url}"). So a row's url must match a file at
+ * resources/views/web/pages/{url}.blade.php.
+ *
+ * The one exception is 'blogs', which has its own controller and route. Its
+ * row exists only so the blog can be placed in the menus alongside the pages;
+ * PageController never renders it.
  *
  * Idempotent: safe to re-run without duplicating rows.
  */
@@ -302,6 +306,26 @@ class WebPageTemplateSeeder extends Seeder
                 'header_position'  => 1,
                 'footer_position'  => 1,
                 'page_order'       => 22,
+                'status'           => 1,
+            ],
+            /*
+             * Route backed rather than blade backed: /blogs is served by
+             * App\Http\Controllers\Web\BlogController, which the explicit
+             * route matches before PageController's catch-all ever sees it.
+             * The row exists so the blog can be placed, reordered and renamed
+             * in the menus like any other page.
+             */
+            [
+                'title'            => 'Blog',
+                'url'              => 'blogs',
+                'layout'           => 'home.blade.php',
+                'meta_title'       => 'Blog | Medical Solutions',
+                'meta_description' => 'News and insights from the Medical Solutions team.',
+                'parent'           => 0,
+                'category'         => 1,
+                'header_position'  => 1,
+                'footer_position'  => 1,
+                'page_order'       => 24,
                 'status'           => 1,
             ],
             [
