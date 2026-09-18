@@ -200,6 +200,26 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Seeding
+    |--------------------------------------------------------------------------
+    |
+    | `media` — whether `db:seed` imports files (the asset library; a host's
+    | gallery). Off makes a quick test database quicker.
+    |
+    | `overwrite_live` — on production, once the site has pages, the seeders
+    | that reset page settings, menus and the like to the code skip
+    | themselves (CmsSeedGuard), so panel edits survive an accidental
+    | `db:seed`. True runs them anyway.
+    |
+    */
+
+    'seeding' => [
+        'media' => env('CMS_SEED_MEDIA', true),
+        'overwrite_live' => env('CMS_SEED_OVERWRITE', false),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Seedable content
     |--------------------------------------------------------------------------
     |

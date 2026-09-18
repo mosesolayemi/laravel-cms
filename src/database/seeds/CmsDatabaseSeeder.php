@@ -34,6 +34,10 @@ class CmsDatabaseSeeder extends Seeder
 
     public function run(): void
     {
+        // Note whether the site existed before anything is seeded, so the
+        // seeders that would overwrite a live site's panel edits know.
+        CmsSeedGuard::start();
+
         foreach ($this->seeders as $seeder) {
             if (! class_exists($seeder)) {
                 $this->command?->warn(sprintf(

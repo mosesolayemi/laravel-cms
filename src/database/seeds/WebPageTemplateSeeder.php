@@ -33,6 +33,11 @@ class WebPageTemplateSeeder extends Seeder
 {
     public function run()
     {
+        // Would overwrite panel edits on a live site; see CmsSeedGuard.
+        if (CmsSeedGuard::protects('WebPageTemplateSeeder', $this->command)) {
+            return;
+        }
+
         $pages = [
             [
                 'title'            => 'Home',

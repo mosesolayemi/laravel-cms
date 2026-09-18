@@ -131,6 +131,10 @@ packages/cms/src/database/seeds/
   MenuSeeder.php             which pages appear in which menu, and where
   CmsContentSeeder.php       what layouts and pages are made of (see
                              "Seeding content" below)
+  CmsAssetSeeder.php         lists files already on the media disk as assets
+                             (call it last, after anything that adds files)
+  CmsSeedGuard.php           keeps the seeders that reset content to the code
+                             from overwriting a live site (see below)
 ```
 
 They are classmap autoloaded, matching the host's own `database/seeds`, so the
@@ -162,6 +166,21 @@ backslash with `Database\Seeders\`, which is not where these live.
 
 Anything whose migration is in the host application — this site's gallery, for
 instance — is seeded from the host's own `database/seeds`.
+
+On production, once the site has pages, `WebPageLayoutSeeder`,
+`WebPageTemplateSeeder` and `MenuSeeder` skip themselves (they reset page
+settings and menus to the code, which would undo panel edits) and say so.
+The reading is taken once at the start of a run, so a first deploy still
+seeds everything. A host seeder that overwrites panel edits can opt in:
+
+```php
+if (CmsSeedGuard::protects('GalleryCategorySeeder', $this->command)) {
+    return;
+}
+```
+
+`CMS_SEED_OVERWRITE=true` (`cms.seeding.overwrite_live`) runs them anyway;
+`CMS_SEED_MEDIA=false` (`cms.seeding.media`) skips file imports.
 
 Each seeder checks what it needs before it runs and says what is missing:
 MenuSeeder names any page it could not place rather than quietly leaving a

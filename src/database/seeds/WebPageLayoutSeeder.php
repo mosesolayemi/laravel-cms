@@ -20,6 +20,11 @@ class WebPageLayoutSeeder extends Seeder
 
     public function run()
     {
+        // Would overwrite panel edits on a live site; see CmsSeedGuard.
+        if (CmsSeedGuard::protects('WebPageLayoutSeeder', $this->command)) {
+            return;
+        }
+
         // Before layouts were built in the panel, the one row pointed at a
         // Blade file. Keep its id, so pages placed in it stay placed.
         if (! Layouts::where('layout', self::DEFAULT)->exists()) {

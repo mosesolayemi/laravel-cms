@@ -80,6 +80,11 @@ class MenuSeeder extends Seeder
 
     public function run()
     {
+        // Would overwrite panel edits on a live site; see CmsSeedGuard.
+        if (CmsSeedGuard::protects('MenuSeeder', $this->command)) {
+            return;
+        }
+
         if (! Schema::hasTable('web_page_templates')) {
             $this->say('error', 'No web_page_templates table. Run: php artisan migrate');
 
