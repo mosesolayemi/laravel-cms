@@ -20,16 +20,28 @@ src/
   Auth/
     Models/Admin.php       panel administrators, on their own guard
     Console/               auth:admin
+  Components/
+    ComponentType.php      what a component type is: fields + a Blade view
+    ComponentRegistry.php  every type editors can place
+    Types/                 the generic types the package ships
+  Rendering/               builder content -> HTML, pages inside layouts
+  Content/                 seedable content definitions and their installer
+  Console/                 cms:seed-components
+  Preview/, Http/, routes/ admin-only previews, including unsaved changes
+  Support/Media.php        image paths -> URLs; theme files -> media disk
   Models/
-    Pages/                 templates, blocks, groups, layouts, SEO, visits
+    Components/            the component library
+    Pages/                 templates, layouts, SEO, visits (+ legacy blocks/groups)
     Blogs/                 posts and categories
   Filament/
     Resources/             one directory per resource
-    Support/CmsFields.php  shared form fields for the legacy integer columns
+    Support/               shared fields, the component builder field
+    Actions/PreviewAction  "Preview" on create/edit screens
     Widgets/
+  resources/views/         cms::page, cms::shell, generic component views
   database/
     migrations/
-    seeds/                 pages, layouts and menu placement
+    seeds/                 pages, layouts, menu placement, content
   config/cms.php
 ```
 
@@ -113,10 +125,12 @@ menu placement is this package's job:
 
 ```
 packages/cms/src/database/seeds/
-  CmsDatabaseSeeder.php      calls the three below, in order
-  WebPageLayoutSeeder.php    layouts -> blade files
+  CmsDatabaseSeeder.php      calls the four below, in order
+  WebPageLayoutSeeder.php    the default layout's row
   WebPageTemplateSeeder.php  the pages themselves
   MenuSeeder.php             which pages appear in which menu, and where
+  CmsContentSeeder.php       what layouts and pages are made of (see
+                             "Seeding content" below)
 ```
 
 They are classmap autoloaded, matching the host's own `database/seeds`, so the
@@ -210,11 +224,249 @@ defines one of these names keeps its own.
 
 ## Content model
 
-A **page** (`web_page_templates`) has many **blocks** (a section of the page).
-A block has many **groups** — one group is one repetition, e.g. a single card
-in a grid of cards. A group's `element` column is a JSON array of
-`{name, type, value}` objects, edited in the panel with a repeater on the
-block's edit screen.
+A **page** (`web_page_templates`) is a list of **components**, stored in its
+`content` column as `[{type, data}, …]` — the shape Filament's Builder
+edits. Each item is either a component held inline (this page's own copy) or
+a reference to one in the **component library** (`cms_components`):
+`{type: "library", data: {component_id: 5}}`. Editing a library component
+changes every page that references it.
+
+A **layout** (`web_page_layouts`) is the frame a page renders in: a *shell*
+view (the `<html>`, `<head>` and assets) plus four builder regions — header,
+before content, after content, footer. A page chooses a layout, or none.
 
 `status` doubles as the publish flag across every table: the site filters on
-`status = 1`, and the panel presents it as a "Published" toggle.
+`status = 1`, and the panel presents it as a "Published" toggle. It applies
+to pages and to library components alike.
+
+The older blocks/groups model (`web_page_blocks`, `web_page_groups`, read
+through `pagedata()`) is still here for sites that use it; its screen is
+hidden unless `cms.panel.legacy_blocks` is true.
+
+## Page builder
+
+### Component types
+
+A component type is a class: the fields an editor fills in, and a Blade view
+those values render through.
+
+```php
+use Cms\Components\ComponentType;
+use Filament\Forms\Components\TextInput;
+
+class Testimonial extends ComponentType
+{
+    public function key(): string { return 'testimonial'; }   // stored with every instance
+    public function label(): string { return 'Testimonial'; }
+    public function view(): string { return 'sections.testimonial'; }
+
+    public function schema(): array
+    {
+        return [
+            TextInput::make('quote')->required(),
+            TextInput::make('name'),
+        ];
+    }
+}
+```
+
+The view receives the data as variables (`$quote`, `$name`) plus `$cms`, the
+`RenderContext` — the page being rendered, its layout, the region, and
+whether it is a preview. Override `with()` to reshape data first, `areas()`
+to restrict a type to the header or footer, `group()` and `icon()` for the
+picker, and `summary()` for the collapsed item's label.
+
+The package ships only generic types — rich text, markdown, heading, image,
+buttons, HTML/embed, spacer, and "developer section" (a Blade view the host
+allows in `cms.components.views`). Anything that renders one site's theme
+belongs in that site and is registered from its config:
+
+```php
+// config/cms.php in the host app
+'components' => [
+    'types' => [App\Cms\Components\Testimonial::class],
+],
+```
+
+A host type with the same key as a core one replaces it — the way to restyle,
+say, rich text without forking the package. `'core' => false` drops the
+generic types entirely.
+
+The generic types render with class names from `cms.rendering.classes`, so a
+site can put them on its own grid without overriding their views. To change
+their markup, publish the views: `php artisan vendor:publish --tag=cms-views`.
+
+### Layouts and the shell
+
+Builder pages render through `cms::page`, which `@extends` the layout's shell
+(or `cms.rendering.shell`, falling back to the package's bare `cms::shell`).
+A shell is any view that yields:
+
+| Yield / stack     | Filled with                                    |
+|-------------------|------------------------------------------------|
+| `title`           | the page's meta title, else its title          |
+| `meta_description`| the page's meta description, if set            |
+| `cms_header`      | the layout's header region                     |
+| `content`         | before-content, the page, after-content        |
+| `cms_footer`      | the layout's footer region                     |
+| `@stack('cms_head')`, `@stack('cms_body_end')`, `@stack('scripts')` | whatever components push |
+
+Components are rendered from inside `cms::page`, so a component view can
+`@push` a script and the shell's stack receives it.
+
+### Rendering from the host
+
+```php
+// in the host's page controller
+$page = Cms::page($url);
+abort_if(! $page || $page->status != Cms\Cms::PUBLISHED, 404);
+
+return Cms::render($page);
+```
+
+In any Blade view, a library component can be placed by handle:
+
+```blade
+@cmsComponent('call-to-action')
+{{ cms_component('call-to-action') }}
+<img src="{{ cms_media($image, 'assets/img/fallback.jpg') }}">
+```
+
+### Publishing a page to Blade
+
+For the change the components cannot express, a page can be written out to a
+Blade file, which then draws its content:
+
+```
+php artisan cms:publish-page services/festival-cover   # one page (home for the home page)
+php artisan cms:publish-page --all                     # every page built from components
+php artisan cms:publish-page about --compact           # one line per section
+php artisan cms:publish-page about --force             # replace a published or reverted file
+php artisan cms:publish-page about --revert            # back to its components; file kept as about.reverted.blade.php
+php artisan cms:publish-page about --use-file          # serve the kept file again, edits intact
+php artisan cms:publish-page about --revert --delete
+```
+
+Reverting renames the file to `*.reverted.blade.php` (a name no view can
+resolve to) and `--use-file` renames it back, so moving a page between its
+file and its components never loses an edit. Only `--force` and
+`--delete` remove one.
+
+Files go under `cms.publishing.views` (a view prefix; `pages` writes
+`resources/views/pages/{url}.blade.php`). Each section is written as its
+data — exactly as the CMS stored it — followed by a copy of its component's
+markup, variables and all:
+
+```blade
+{{-- ── 2. Intro with photo ──────────────── --}}
+@php
+    $__cmsData = [
+        'tagline' => 'festival cover',
+        'title' => 'From Small Events to <br> 80,000 Capacity a Day',
+    ];
+@endphp
+@cmsSection('intro', $__cmsData)
+    <section class="about-one section-space">
+        … {{ $tagline }} … {{ $badgeNumber ?? '' }} …
+    </section>
+@endCmsSection
+```
+
+`@cmsSection` runs the data through the component type, so anything it works
+out at render time (a gallery read from the database, an image URL) stays
+live, and removes the section's variables afterwards so none leak into the
+next section's `?? ''` defaults. `--compact` writes `@cmsBlock('intro',
+$__cmsData)` instead: the section renders exactly as in the CMS, and markup
+can be added around it. Library components are placed with
+`@cmsComponent('handle')`, so they stay shared.
+
+The file holds the page's content only: the layout's header and footer, the
+title, and previews all still come from the CMS. While a file is in use the
+page's components are kept but not shown; the page screen says so, and its
+**Drawn by** field switches either way, renaming the file as the command
+does.
+
+### Library components: copy or link
+
+"Copy from the library" puts an independent copy of a library component's
+type and data on the page: editing it there never changes the original.
+"Shared library component" links instead, so library edits show everywhere
+it is linked. A linked item's menu has "Make a page copy"; any item's menu
+has "Save to library". Library components carry a free-text `group`.
+
+### Asset library
+
+`Cms\Models\Assets\Asset` indexes every file on the media disk the CMS
+uses. Image fields built with `CmsFields::image()` register their uploads
+and offer "Choose from assets". The Assets screen uploads, groups and
+deletes; deletion is refused while content uses the file, and files in
+`cms.assets.external` directories are never removed.
+
+```
+php artisan cms:import-assets [--path=images/gallery] [--group=Gallery] [--dry-run]
+```
+
+### Publishing library components
+
+`php artisan cms:publish-component {handle}` takes the same options as
+`cms:publish-page` (`--compact`, `--force`, `--revert`, `--delete`,
+`--use-file`, `--all`), writing under `cms.publishing.components`. Linked
+placements show the file while it is in use. Both commands also take
+`--sync`, which reads the data blocks (and section order) back into the CMS;
+a data block holding anything but plain values is refused.
+
+### Preview
+
+Every page, layout and component screen has **Preview**: it stashes the
+form's current (unsaved) state and renders it in a modal, with a link out to a
+full tab. Saved records can be previewed from their table rows, including
+unpublished ones. Previews are served from `/cms-preview` (`cms.preview.path`)
+to signed-in administrators only, marked `noindex`, and show an explanation
+wherever a section could not be rendered — where visitors would see nothing.
+
+A host catch-all page route must leave `cms.preview.path` alone.
+
+### Seeding content
+
+`php artisan cms:seed-components` installs every `ContentDefinition` listed
+in `cms.content`: library components, layouts and page content, each keyed
+by a stable handle (the URL, for pages).
+
+```php
+use Cms\Content\Blocks;
+use Cms\Content\ContentDefinition;
+use Cms\Support\Media;
+
+class SiteContent implements ContentDefinition
+{
+    public function components(): array
+    {
+        return ['cta' => ['name' => 'Call to action', 'type' => 'call-to-action', 'data' => [...]]];
+    }
+
+    public function layouts(): array
+    {
+        return ['default' => [
+            'label' => 'Site layout',
+            'is_default' => true,
+            'header' => [Blocks::library('site-header')],
+        ]];
+    }
+
+    public function pages(): array
+    {
+        return ['about' => ['layout' => 'default', 'content' => [
+            Blocks::make('heading', ['heading' => 'About us']),
+            Blocks::make('image', ['image' => Media::import('assets/img/team.jpg')]),
+            Blocks::library('cta'),
+        ]]];
+    }
+}
+```
+
+It is safe to re-run: anything that already exists is left as editors made
+it. `--force` overwrites with the definitions; `--only=pages` (repeatable)
+limits it. `Media::import()` copies a file from `public/` onto the media
+disk, so seeded images can be previewed and replaced in the panel like any
+upload. `CmsDatabaseSeeder` runs the same installer, so `db:seed` loads it
+too.

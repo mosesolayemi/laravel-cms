@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static Templates|null page(?string $url)
+ * @method static \Illuminate\Contracts\View\View render(Templates $page)
+ * @method static \Illuminate\Support\HtmlString component(\Cms\Models\Components\Component|int|string $reference, ?Templates $page = null)
  * @method static array menu()
  * @method static array footerMenu()
  * @method static array footerColumns()

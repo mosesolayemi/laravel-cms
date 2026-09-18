@@ -40,6 +40,10 @@ return [
         'resources' => [],
         'pages' => [],
         'widgets' => [],
+
+        // Show the older blocks/groups editor under each page, for sites
+        // whose templates still read content through pagedata().
+        'legacy_blocks' => false,
     ],
 
     /*
@@ -56,6 +60,28 @@ return [
         'disk' => 'public',
         'images' => 'images',
         'videos' => 'videos',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Asset library
+    |--------------------------------------------------------------------------
+    |
+    | Every upload made through the CMS is added to the asset library, where
+    | it can be chosen again on any page or component.
+    |
+    | `directory` is where files uploaded on the Assets screen go, under
+    | media.images. `external` lists media directories other modules own —
+    | their files can be added to the library (cms:import-assets) and reused,
+    | but deleting an asset never deletes one of their files.
+    |
+    */
+
+    'assets' => [
+        'directory' => 'assets',
+        'external' => [
+            'images/blog',
+        ],
     ],
 
     /*
@@ -81,6 +107,110 @@ return [
             'gallery' => ['width' => 1140, 'height' => 832],
             'gallery_thumb' => ['width' => 285, 'height' => 208],
         ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Components
+    |--------------------------------------------------------------------------
+    |
+    | The component types editors can place on pages and layouts.
+    |
+    | `core` registers the package's generic types — rich text, markdown,
+    | heading, image, buttons, HTML, spacer and developer sections. Set it to
+    | false to offer only the host's own.
+    |
+    | `types` lists the host's own ComponentType classes: anything tied to the
+    | site's theme belongs there, not in the package. A host type with the
+    | same key as a core one replaces it.
+    |
+    | `views` are the Blade views the "Developer section" component may
+    | place, as view => label. Leave empty to hide that component.
+    |
+    */
+
+    'components' => [
+        'core' => true,
+        'types' => [],
+        'views' => [],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rendering
+    |--------------------------------------------------------------------------
+    |
+    | `shell` is the Blade view a builder page is rendered inside when its
+    | layout names none. It must yield `cms_header`, `content` and
+    | `cms_footer`; see the package README for the full contract. `shells`
+    | adds more choices to the layout screen, as view => label.
+    |
+    | `classes` are the CSS classes the generic components render with, so a
+    | site can put them on its own grid without overriding their views.
+    |
+    */
+
+    'rendering' => [
+        'shell' => 'cms::shell',
+        'shells' => [],
+
+        'classes' => [
+            'section' => 'cms-section',
+            'container' => 'cms-container',
+            'prose' => 'cms-prose',
+            'heading' => 'cms-heading__title',
+            'button' => 'cms-button',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Publishing pages to Blade
+    |--------------------------------------------------------------------------
+    |
+    | `php artisan cms:publish-page` writes a page out as a Blade file, for a
+    | change the components cannot express, and the file then draws the
+    | page's content. `views` is where those files go, as a view name prefix:
+    | "pages" writes resources/views/pages/{url}.blade.php.
+    |
+    */
+
+    'publishing' => [
+        'views' => 'pages',
+        // cms:publish-component writes library components here.
+        'components' => 'cms-components',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Preview
+    |--------------------------------------------------------------------------
+    |
+    | Where previews are served from, and how long a preview of unsaved
+    | changes stays available (minutes). The host's catch-all page route must
+    | not swallow `path`.
+    |
+    */
+
+    'preview' => [
+        'path' => 'cms-preview',
+        'middleware' => ['web'],
+        'ttl' => 60,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Seedable content
+    |--------------------------------------------------------------------------
+    |
+    | ContentDefinition classes installed by `php artisan cms:seed-components`
+    | and by CmsDatabaseSeeder. The package's own adds a blank layout; a site
+    | appends its own definition of its pages, components and layouts.
+    |
+    */
+
+    'content' => [
+        Cms\Content\CoreContent::class,
     ],
 
 ];

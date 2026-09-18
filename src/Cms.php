@@ -4,10 +4,16 @@ namespace Cms;
 
 use Cms\Models\Blogs\Blogs;
 use Cms\Models\Blogs\Category;
+use Cms\Models\Components\Component;
 use Cms\Models\Pages\PageVisit;
 use Cms\Models\Pages\Templates;
 use Cms\Models\Settings\Setting;
+use Cms\Rendering\ComponentRenderer;
+use Cms\Rendering\PageRenderer;
+use Cms\Rendering\RenderContext;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\HtmlString;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -34,6 +40,24 @@ class Cms
             ->with(['groups', 'layouts'])
             ->where('url', $url)
             ->first();
+    }
+
+    /**
+     * A page rendered in its layout, ready to return from a controller —
+     * from its components, or from its published Blade view if it has one.
+     */
+    public function render(Templates $page): View
+    {
+        return app(PageRenderer::class)->view($page);
+    }
+
+    /**
+     * One library component, by handle or id. Renders nothing if it is
+     * missing or unpublished.
+     */
+    public function component(Component|int|string $reference, ?Templates $page = null): HtmlString
+    {
+        return new HtmlString(app(ComponentRenderer::class)->renderLibrary($reference, new RenderContext(page: $page)));
     }
 
     /**

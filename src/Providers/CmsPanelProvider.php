@@ -3,9 +3,11 @@
 namespace Cms\Providers;
 
 use Cms\Filament\Resources\Admins\AdminResource;
+use Cms\Filament\Resources\Assets\AssetResource;
 use Cms\Filament\Resources\BlogCategories\BlogCategoryResource;
 use Cms\Filament\Resources\Blocks\BlockResource;
 use Cms\Filament\Resources\Blogs\BlogResource;
+use Cms\Filament\Resources\Components\ComponentResource;
 use Cms\Filament\Resources\Enquiries\EnquiryResource;
 use Cms\Filament\Resources\Layouts\LayoutResource;
 use Cms\Filament\Resources\PageVisits\PageVisitResource;
@@ -57,6 +59,8 @@ class CmsPanelProvider extends PanelProvider
             ])
             ->resources([
                 PageResource::class,
+                ComponentResource::class,
+                AssetResource::class,
                 BlockResource::class,
                 LayoutResource::class,
                 SeoKeywordResource::class,

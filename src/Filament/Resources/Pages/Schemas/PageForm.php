@@ -3,22 +3,36 @@
 namespace Cms\Filament\Resources\Pages\Schemas;
 
 use Cms\Cms;
+use Cms\Filament\Resources\Layouts\LayoutResource;
 use Cms\Filament\Support\CmsFields;
+use Cms\Filament\Support\ComponentBuilder;
+use Cms\Filament\Support\PublishedFile;
+use Cms\Models\Pages\Layouts;
 use Cms\Models\Pages\SeoKeyword;
 use Cms\Models\Pages\Templates;
+use Cms\Publishing\PagePublisher;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Str;
 
 /**
- * A page has three separable concerns — what it is, where it appears in the
- * menus, and how it presents to search engines — so they are tabbed rather
- * than stacked into one long scroll of half-empty cards.
+ * The page screen: what the page is made of on the left, what the page is on
+ * the right.
+ *
+ * The main column is tabbed — content, menu placement, search engines — so
+ * each concern gets the full width instead of one long scroll of half-empty
+ * cards. Title, URL, layout and publishing sit in the sidebar, visible
+ * whichever tab is open.
  */
 class PageForm
 {
@@ -27,24 +41,45 @@ class PageForm
         return $schema
             ->columns(1)
             ->components([
-                Tabs::make()
+                Grid::make(['default' => 1, 'lg' => 3])
                     ->columnSpanFull()
-                    ->tabs([
-                        Tab::make('Page')
-                            ->icon('heroicon-o-document-text')
-                            ->columns(2)
+                    ->schema([
+                        Tabs::make()
+                            ->columnSpan(['lg' => 2])
+                            ->persistTabInQueryString()
+                            ->tabs([
+                                Tab::make('Content')
+                                    ->icon('heroicon-o-squares-plus')
+                                    ->badge(fn (Get $get): ?int => count($get('content') ?? []) ?: null)
+                                    ->schema(self::contentFields()),
+
+                                Tab::make('Menus')
+                                    ->icon('heroicon-o-bars-3')
+                                    ->schema(self::menuFields()),
+
+                                Tab::make('SEO')
+                                    ->icon('heroicon-o-magnifying-glass')
+                                    ->columns(2)
+                                    ->schema(self::seoFields()),
+                            ]),
+
+                        Section::make()
+                            ->columnSpan(['lg' => 1])
                             ->schema(self::pageFields()),
-
-                        Tab::make('Menus')
-                            ->icon('heroicon-o-bars-3')
-                            ->schema(self::menuFields()),
-
-                        Tab::make('SEO')
-                            ->icon('heroicon-o-magnifying-glass')
-                            ->columns(2)
-                            ->schema(self::seoFields()),
                     ]),
             ]);
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    protected static function contentFields(): array
+    {
+        return [
+            ...PublishedFile::callouts(PagePublisher::class, 'page'),
+
+            ComponentBuilder::make('content'),
+        ];
     }
 
     /**
@@ -70,8 +105,25 @@ class PageForm
                 ->required()
                 ->unique(ignoreRecord: true)
                 ->maxLength(255)
-                ->prefix(fn (): string => rtrim(config('app.url'), '/') . '/')
-                ->helperText('Must match the Blade view name under resources/views/web/pages.'),
+                ->prefix('/')
+                ->helperText('Where the page lives on the site. Use “home” for the home page; a slash nests it, e.g. services/festival-cover.'),
+
+            Select::make('layout_id')
+                ->label('Layout')
+                ->options(fn (): array => Layouts::query()->orderByDesc('is_default')->orderBy('label')->pluck('label', 'id')->all())
+                ->placeholder('No layout — page content only')
+                ->default(fn (): ?int => Layouts::defaultLayout()?->getKey())
+                ->helperText('The header, footer and surrounding sections this page is shown in.')
+                ->hintAction(
+                    Action::make('editLayout')
+                        ->label('Edit layout')
+                        ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                        ->url(fn (Get $get): ?string => filled($get('layout_id'))
+                            ? LayoutResource::getUrl('edit', ['record' => $get('layout_id')])
+                            : null)
+                        ->openUrlInNewTab()
+                        ->visible(fn (Get $get): bool => filled($get('layout_id'))),
+                ),
 
             Select::make('parent')
                 ->label('Parent page')
@@ -98,6 +150,8 @@ class PageForm
                 ->dehydrateStateUsing(fn ($state): int => (int) $state),
 
             CmsFields::published(),
+
+            PublishedFile::field(PagePublisher::class, 'Components (edited here)'),
         ];
     }
 

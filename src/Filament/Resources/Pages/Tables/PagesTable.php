@@ -3,10 +3,14 @@
 namespace Cms\Filament\Resources\Pages\Tables;
 
 use Cms\Cms;
+use Cms\Models\Pages\Templates;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
@@ -22,6 +26,7 @@ class PagesTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('url')
+                    ->visibleFrom('md')
                     ->label('Slug')
                     ->badge()
                     ->searchable(),
@@ -39,10 +44,26 @@ class PagesTable
                     ->counts('children')
                     ->alignCenter()
                     ->toggleable(),
-                TextColumn::make('blocks_count')
-                    ->label('Blocks')
-                    ->counts('blocks')
-                    ->alignCenter(),
+                TextColumn::make('layouts.label')
+                    ->visibleFrom('md')
+                    ->label('Layout')
+                    ->placeholder('None')
+                    ->badge()
+                    ->color('gray')
+                    ->toggleable(),
+                TextColumn::make('content')
+                    ->visibleFrom('md')
+                    ->label('Components')
+                    ->state(fn (Templates $record): string => $record->publishedView()
+                        ? 'Blade file'
+                        : (string) count($record->content ?? []))
+                    ->badge(fn (Templates $record): bool => $record->publishedView() !== null)
+                    ->color('warning')
+                    ->tooltip(fn (Templates $record): ?string => $record->publishedView()
+                        ? 'Drawn by resources/views/' . str_replace('.', '/', $record->view) . '.blade.php'
+                        : null)
+                    ->alignCenter()
+                    ->toggleable(),
                 TextColumn::make('header_position')
                     ->label('Header')
                     ->badge()
@@ -56,6 +77,7 @@ class PagesTable
                     ->color(fn ($state): string => in_array($state, [null, '', '0', Cms::FOOTER_NONE], true) ? 'gray' : 'success')
                     ->toggleable(),
                 TextColumn::make('page_order')
+                    ->visibleFrom('md')
                     ->label('Order')
                     ->sortable()
                     ->alignCenter(),
@@ -75,7 +97,19 @@ class PagesTable
             ])
             ->recordActions([
                 EditAction::make(),
-                DeleteAction::make(),
+                ActionGroup::make([
+                    Action::make('preview')
+                        ->icon(Heroicon::OutlinedEye)
+                        ->url(fn (Templates $record): string => route('cms.preview.page', $record))
+                        ->openUrlInNewTab(),
+                    Action::make('visit')
+                        ->label('Visit URL')
+                        ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                        ->url(fn (Templates $record): string => $record->link())
+                        ->openUrlInNewTab()
+                        ->visible(fn (Templates $record): bool => (int) $record->status === 1),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

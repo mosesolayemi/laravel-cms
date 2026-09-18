@@ -40,11 +40,13 @@ class PageResource extends Resource
         return PagesTable::configure($table);
     }
 
+    /**
+     * The older blocks/groups content model is superseded by the component
+     * builder, so its screen only appears where a site still reads it.
+     */
     public static function getRelations(): array
     {
-        return [
-            BlocksRelationManager::class,
-        ];
+        return config('cms.panel.legacy_blocks', false) ? [BlocksRelationManager::class] : [];
     }
 
     public static function getPages(): array

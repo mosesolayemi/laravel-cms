@@ -24,6 +24,8 @@ class Templates extends Model
         'meta_description',
         'layout_id',
         'url',
+        'content',
+        'view',
         'parent',
         'category',
         'page_order',
@@ -32,12 +34,34 @@ class Templates extends Model
         'status',
     ];
 
+    protected $casts = [
+        'content' => 'array',
+    ];
+
     public function blocks(){
         return $this->hasMany('Cms\Models\Pages\Blocks', 'template_id', 'id');
     }
 
     public function layouts(){
         return $this->hasOne('Cms\Models\Pages\Layouts', 'id', 'layout_id');
+    }
+
+    /**
+     * Whether this page is assembled from builder components rather than a
+     * developer-written Blade view.
+     */
+    public function hasBuilderContent(): bool
+    {
+        return filled($this->content);
+    }
+
+    /**
+     * The published Blade view drawing this page's content, if it has one and
+     * the file is there. When it is, the page's components are not shown.
+     */
+    public function publishedView(): ?string
+    {
+        return filled($this->view) && view()->exists($this->view) ? $this->view : null;
     }
 
     
@@ -51,12 +75,6 @@ class Templates extends Model
         return $this->hasOne('Cms\Models\Pages\SeoKeyword', 'id', 'seo_keyword_id');
     }
 
-    /**
-     * How this page is labelled in a menu.
-     *
-     * Falls back to the page's own title, so a menu label only has to be set
-     * where the two genuinely differ.
-     */
     /**
      * The page this one is nested under, if any.
      */
@@ -101,6 +119,12 @@ class Templates extends Model
         return $this->url === 'home' ? '/' : '/' . ltrim((string) $this->url, '/');
     }
 
+    /**
+     * How this page is labelled in a menu.
+     *
+     * Falls back to the page's own title, so a menu label only has to be set
+     * where the two genuinely differ.
+     */
     public function menuLabel(): string
     {
         return $this->menu_title ?: $this->title;

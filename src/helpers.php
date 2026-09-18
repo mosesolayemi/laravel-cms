@@ -17,6 +17,7 @@
 */
 
 use Cms\Facades\Cms;
+use Cms\Support\Media;
 use Illuminate\Support\Facades\Log;
 
 if (! function_exists('setting')) {
@@ -175,5 +176,42 @@ if (! function_exists('cms_image')) {
         }
 
         return $fallback ? asset($fallback) : '';
+    }
+}
+
+if (! function_exists('cms_media')) {
+    /**
+     * The URL for an image a component stores: a path on the CMS media disk,
+     * a file under public/, or an absolute URL. Empty when there is nothing
+     * to show and no fallback.
+     *
+     * @param  mixed        $value     what the component stored
+     * @param  string|null  $fallback  theme asset path, relative to public/
+     */
+    function cms_media($value = null, $fallback = null)
+    {
+        return Media::url($value, $fallback);
+    }
+}
+
+if (! function_exists('cms_component')) {
+    /**
+     * Render a library component by handle or id, anywhere in Blade — so a
+     * hand-written view can still share a section editors maintain.
+     */
+    function cms_component($reference, $page = null)
+    {
+        return Cms::component($reference, $page);
+    }
+}
+
+if (! function_exists('cms_class')) {
+    /**
+     * A CSS class the generic components render with; see
+     * `cms.rendering.classes`.
+     */
+    function cms_class($name)
+    {
+        return config("cms.rendering.classes.{$name}", "cms-{$name}");
     }
 }

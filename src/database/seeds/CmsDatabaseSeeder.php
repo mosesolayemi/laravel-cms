@@ -16,8 +16,9 @@ use Illuminate\Database\Seeder;
  *
  *     php artisan db:seed --class='Cms\Database\Seeders\CmsDatabaseSeeder'
  *
- * Order matters: a template row needs its layout row first, and MenuSeeder
- * places pages in the menus, so the pages must already exist.
+ * Order matters: a template row needs its layout row first, MenuSeeder
+ * places pages in the menus, so the pages must already exist, and
+ * CmsContentSeeder fills in what the layouts and pages are made of.
  */
 class CmsDatabaseSeeder extends Seeder
 {
@@ -28,6 +29,7 @@ class CmsDatabaseSeeder extends Seeder
         WebPageLayoutSeeder::class,
         WebPageTemplateSeeder::class,
         MenuSeeder::class, // u can comment this out if u are reusing this module in anothe project and u dont want it in the project.... t for thanks
+        CmsContentSeeder::class,
     ];
 
     public function run(): void
