@@ -44,6 +44,20 @@ return [
         // Show the older blocks/groups editor under each page, for sites
         // whose templates still read content through pagedata().
         'legacy_blocks' => false,
+
+        /*
+         * Branding. `logo` is a path under public/ (or a URL); when set it
+         * replaces the brand name in the sidebar and on the login screen.
+         * `logo_dark` is used in dark mode, falling back to `logo`.
+         * `primary` is the panel's accent colour, as a hex string.
+         */
+        'logo' => null,
+        'logo_dark' => null,
+        'logo_height' => '2.25rem',
+        'primary' => null,
+
+        // Browser-tab icon for the panel; a path under public/ or a URL.
+        'favicon' => null,
     ],
 
     /*

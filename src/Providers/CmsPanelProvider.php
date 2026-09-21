@@ -14,6 +14,7 @@ use Cms\Filament\Resources\PageVisits\PageVisitResource;
 use Cms\Filament\Resources\Pages\PageResource;
 use Cms\Filament\Resources\SeoKeywords\SeoKeywordResource;
 use Cms\Filament\Widgets\CmsOverview;
+use Cms\Filament\Widgets\VisitsChart;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -45,10 +46,18 @@ class CmsPanelProvider extends PanelProvider
             ->id(config('cms.panel.id'))
             ->path(config('cms.panel.path'))
             ->brandName(config('cms.panel.brand'))
+            // A site that sets `panel.logo` gets its own mark in the sidebar
+            // and on the login screen; the brand name stays as the alt text.
+            ->brandLogo(fn () => ($logo = config('cms.panel.logo')) ? asset($logo) : null)
+            ->darkModeBrandLogo(fn () => ($logo = config('cms.panel.logo_dark') ?: config('cms.panel.logo')) ? asset($logo) : null)
+            ->brandLogoHeight(config('cms.panel.logo_height', '2.25rem'))
+            ->favicon(fn () => ($icon = config('cms.panel.favicon')) ? asset($icon) : null)
             ->login()
             ->authGuard(config('cms.auth.guard'))
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => ($hex = config('cms.panel.primary'))
+                    ? Color::hex($hex)
+                    : Color::Amber,
             ])
             ->navigationGroups([
                 'Content',
@@ -79,6 +88,7 @@ class CmsPanelProvider extends PanelProvider
             ])
             ->widgets([
                 CmsOverview::class,
+                VisitsChart::class,
                 ...config('cms.panel.widgets', []),
             ])
             ->middleware([

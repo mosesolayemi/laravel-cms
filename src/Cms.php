@@ -213,7 +213,10 @@ class Cms
     }
 
     /**
-     * Record a hit against the current month's counter for a page.
+     * Record a hit against today's counter for a page.
+     *
+     * One row per page per day: monthly figures are a sum over the month's
+     * rows, so the same data answers daily, weekly and monthly questions.
      */
     public function recordVisit(?string $url): void
     {
@@ -223,7 +226,12 @@ class Cms
 
         PageVisit::query()
             ->firstOrCreate(
-                ['page_url' => $url, 'year' => (int) date('Y'), 'month' => (int) date('m')],
+                [
+                    'page_url' => $url,
+                    'year' => (int) date('Y'),
+                    'month' => (int) date('m'),
+                    'day' => (int) date('d'),
+                ],
                 ['visits' => 0],
             )
             ->increment('visits');

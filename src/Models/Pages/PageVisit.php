@@ -17,6 +17,7 @@ class PageVisit extends Model
         'visits',
         'year',
         'month',
+        'day',
     ];
 
 }
