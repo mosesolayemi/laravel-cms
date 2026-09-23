@@ -72,8 +72,14 @@ class Media
         $target = trim(config('cms.media.images', 'images') . '/' . trim($directory, '/'), '/')
             . '/' . Str::of($publicPath)->after('assets/images/')->replace('/', '-');
 
-        if (! static::disk()->exists($target)) {
-            static::disk()->put($target, File::get($source));
+        // Copy when it is missing, and again when the file in the repository
+        // has changed: a deploy that updates a theme image would otherwise
+        // keep serving the copy made by the first seed, since the target path
+        // is derived from the source name and therefore never changes.
+        $contents = File::get($source);
+
+        if (! static::disk()->exists($target) || static::disk()->get($target) !== $contents) {
+            static::disk()->put($target, $contents);
         }
 
         // Seeded images join the asset library, grouped by the theme folder
