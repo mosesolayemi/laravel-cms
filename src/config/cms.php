@@ -78,6 +78,32 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Footer link columns
+    |--------------------------------------------------------------------------
+    |
+    | The lists of pages the footer draws beside its other widgets. Each page
+    | names the column it belongs in (footer_position) and its place within it
+    | (footer_order), both editable on one screen rather than page by page.
+    |
+    | These are the columns a site starts with. Once someone edits them in the
+    | panel the stored list wins, so a host only changes this to alter what a
+    | fresh install begins with.
+    |
+    | `key` is what a page stores, so it must not change once pages point at
+    | it; `title` and `highlight` are the two halves of the heading, the
+    | second of which the theme picks out.
+    |
+    */
+
+    'footer' => [
+        'columns' => [
+            ['key' => 'services', 'title' => 'our', 'highlight' => 'Services'],
+            ['key' => 'links', 'title' => 'useful', 'highlight' => 'links'],
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Asset library
     |--------------------------------------------------------------------------
     |

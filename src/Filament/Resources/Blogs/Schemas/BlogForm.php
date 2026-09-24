@@ -5,7 +5,6 @@ namespace Cms\Filament\Resources\Blogs\Schemas;
 use Cms\Filament\Support\CmsFields;
 use Cms\Models\Blogs\Blogs;
 use Cms\Models\Blogs\Category;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -79,11 +78,8 @@ class BlogForm
                     ->description('Shown at the top of the post and in listings.')
                     ->collapsible()
                     ->schema([
-                        FileUpload::make('cover')
+                        CmsFields::image('cover', 'blog')
                             ->hiddenLabel()
-                            ->image()
-                            ->disk(config('cms.media.disk', 'public'))
-                            ->directory(config('cms.media.images', 'images') . '/blog')
                             ->imagePreviewHeight('160')
                             ->maxSize(10240),
                     ]),

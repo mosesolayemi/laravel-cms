@@ -212,7 +212,7 @@ class PageForm
                         // until someone noticed and picked a value.
                         ->formatStateUsing(fn ($state) => $state ?: Cms::FOOTER_NONE)
                         ->required()
-                        ->helperText('Which of the footer’s two lists this appears in.'),
+                        ->helperText('Which of the footer’s link lists this appears in. The lists themselves are edited under Content → Footer.'),
                     TextInput::make('footer_order')
                         ->label('Position')
                         ->numeric()

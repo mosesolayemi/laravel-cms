@@ -97,17 +97,56 @@ class Cms
     public const FOOTER_NONE = 'none';
 
     /**
+     * Where the panel's edited column list is kept. Absent until someone
+     * saves the footer screen, so config holds what a fresh site starts with.
+     */
+    public const FOOTER_COLUMNS_SETTING = 'footer.columns';
+
+    /**
+     * The footer's link columns, in the order the footer draws them.
+     *
+     * Columns are data rather than a fixed pair: the panel can rename them,
+     * reorder them, add a third or remove one. Rows are normalised here, so
+     * neither the theme nor the panel has to defend against a half-filled
+     * column left behind by an edit.
+     *
+     * @return array<int, array{key: string, title: string, highlight: string}>
+     */
+    public static function footerColumnList(): array
+    {
+        $stored = Setting::get(self::FOOTER_COLUMNS_SETTING);
+
+        $columns = is_array($stored) && $stored !== []
+            ? $stored
+            : config('cms.footer.columns', []);
+
+        return collect($columns)
+            ->map(fn ($column): array => [
+                'key' => (string) ($column['key'] ?? ''),
+                'title' => (string) ($column['title'] ?? ''),
+                'highlight' => (string) ($column['highlight'] ?? ''),
+            ])
+            // A column with no key is one nothing can be filed under, so it
+            // would render as a permanently empty list.
+            ->filter(fn (array $column): bool => filled($column['key']) && $column['key'] !== self::FOOTER_NONE)
+            ->unique('key')
+            ->values()
+            ->all();
+    }
+
+    /**
      * The columns a page can be placed in, for the panel's select.
      *
      * @return array<string, string>
      */
     public static function footerColumns(): array
     {
-        return [
-            self::FOOTER_NONE => 'Not shown',
-            'services' => 'Services column',
-            'links' => 'Useful links column',
-        ];
+        return collect(static::footerColumnList())
+            ->mapWithKeys(fn (array $column): array => [
+                $column['key'] => trim($column['title'] . ' ' . $column['highlight']) ?: $column['key'],
+            ])
+            ->prepend('Not shown', self::FOOTER_NONE)
+            ->all();
     }
 
     /**
