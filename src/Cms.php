@@ -11,6 +11,7 @@ use Cms\Models\Settings\Setting;
 use Cms\Rendering\ComponentRenderer;
 use Cms\Rendering\PageRenderer;
 use Cms\Rendering\RenderContext;
+use Cms\Settings\SettingsSchema;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\HtmlString;
@@ -184,10 +185,15 @@ class Cms
 
     /**
      * An editable piece of site chrome — footer wording, contact details.
+     *
+     * With no default given, the one declared for the key in
+     * `cms.settings.sections` stands in. That keeps the fallback wording in
+     * one place instead of being repeated, and mis-repeated, in every template
+     * that reads the value.
      */
     public function setting(string $key, mixed $default = null): mixed
     {
-        return Setting::get($key, $default);
+        return Setting::get($key, $default ?? (SettingsSchema::defaults()[$key] ?? null));
     }
 
     /**

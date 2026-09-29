@@ -4,6 +4,7 @@ namespace Cms\Rendering;
 
 use Cms\Components\ComponentRegistry;
 use Cms\Models\Components\Component;
+use Cms\Settings\Tokens;
 use Illuminate\Support\HtmlString;
 use Throwable;
 
@@ -117,6 +118,11 @@ class ComponentRenderer
         if ($key === ComponentRegistry::LIBRARY) {
             return $this->renderLibrary($data['component_id'] ?? null, $context);
         }
+
+        // A shared value written into the content as {phone} or {email} is
+        // resolved here rather than in each component, so every section gets
+        // it without knowing the feature exists.
+        $data = Tokens::apply($data);
 
         $type = $this->registry->get($key);
 

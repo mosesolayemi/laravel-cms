@@ -7,7 +7,7 @@
 |
 | Global functions the site's Blade templates use to reach CMS content. They
 | are thin wrappers over the Cms read API, kept as plain functions because a
-| template reads better as `setting('footer.email')` than as a facade call.
+| template reads better as `setting('site.email')` than as a facade call.
 |
 | Loaded by composer's `files` autoloader, so they are available everywhere
 | without the host having to import anything. Each is guarded with
@@ -30,6 +30,20 @@ if (! function_exists('setting')) {
     function setting($key, $default = null)
     {
         return Cms::setting($key, $default);
+    }
+}
+
+if (! function_exists('site_text')) {
+    /**
+     * Text with the shared settings written into it: `{phone}`, `{email}`
+     * and whatever else `cms.settings.tokens` names.
+     *
+     * Component content passes through this on its own as the page renders;
+     * this is for a hand-written view holding text of its own.
+     */
+    function site_text($text)
+    {
+        return \Cms\Settings\Tokens::apply($text);
     }
 }
 

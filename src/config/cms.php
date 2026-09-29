@@ -104,6 +104,66 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Shared site settings
+    |--------------------------------------------------------------------------
+    |
+    | Values read all over a site but owned by none of its pages — the phone
+    | number, the email address, the offices. They are kept in the
+    | `site_settings` store and edited on one screen, so changing one changes
+    | every page that shows it.
+    |
+    | `sections` describes that screen. Each section has a heading and a list
+    | of fields, keyed by the setting key templates read with `setting()`:
+    |
+    |     'contact' => [
+    |         'heading' => 'Contact details',
+    |         'columns' => 2,
+    |         'fields' => [
+    |             'site.phone' => ['label' => 'Phone', 'default' => '…'],
+    |             'site.offices' => [
+    |                 'type' => 'repeater',
+    |                 'item_label' => 'name',
+    |                 'schema' => ['name' => [], 'address' => ['type' => 'textarea']],
+    |             ],
+    |         ],
+    |     ],
+    |
+    | Field types: text (the default), email, url, tel, textarea, image,
+    | toggle, select, repeater. `default` is the wording the theme shipped
+    | with, so an unedited site renders as it always did.
+    |
+    | Which settings a site keeps is that site's business, so this is empty
+    | here; the screen hides itself until the host fills it in.
+    |
+    | A section may also name a `component`, which makes it placeable on pages:
+    |
+    |     'component' => [
+    |         'type' => 'offices',              // a registered component type
+    |         'handle' => 'shared-offices',     // its row in the library
+    |         'name' => 'Offices',
+    |         'group' => 'Shared',
+    |     ],
+    |
+    | The Settings screen then offers "Add to the component library" for that
+    | section. The library row is created with no data of its own, so the
+    | component reads the shared values as it renders: place it on ten pages and
+    | all ten follow this screen. A page that should differ fills in that one
+    | placement's fields, or takes a copy from the library.
+    |
+    | `tokens` are the settings editors may write into page content, as
+    | token name => setting key: with 'phone' => 'site.phone', any component's
+    | text may say {phone} and it is replaced as the page renders. That is how
+    | a change here reaches pages written long after the value moved.
+    |
+    */
+
+    'settings' => [
+        'sections' => [],
+        'tokens' => [],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Asset library
     |--------------------------------------------------------------------------
     |
