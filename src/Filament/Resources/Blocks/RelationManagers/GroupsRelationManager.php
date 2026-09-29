@@ -83,11 +83,11 @@ class GroupsRelationManager extends RelationManager
                             ->columnSpanFull()
                             ->visible(fn (callable $get): bool => $get('type') === 'html'),
 
-                        FileUpload::make('value')
+                        // Upload from the computer or reuse a file already in
+                        // the library; either way the file is registered as an
+                        // asset, so it can be picked again elsewhere.
+                        CmsFields::image('value', 'blocks')
                             ->label('Image')
-                            ->image()
-                            ->disk('public')
-                            ->directory('images')
                             ->columnSpanFull()
                             ->visible(fn (callable $get): bool => $get('type') === 'image'),
 

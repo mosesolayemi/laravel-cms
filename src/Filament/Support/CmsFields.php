@@ -3,6 +3,7 @@
 namespace Cms\Filament\Support;
 
 use Cms\Models\Assets\Asset;
+use Cms\Support\Media;
 use Filament\Actions\Action;
 use Filament\Forms\Components\BaseFileUpload;
 use Filament\Forms\Components\FileUpload;
@@ -11,6 +12,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
@@ -51,10 +53,10 @@ class CmsFields
     /**
      * An image on the CMS media disk, for component fields.
      *
-     * Two ways in: upload from the computer — the file is added to the asset
-     * library as it is stored — or "Choose from assets" to reuse one already
-     * there. Either way the field stores a plain path, which components
-     * resolve with cms_media().
+     * Two ways in: drop a file straight onto the field, or "Choose an image"
+     * for a modal that uploads from the computer or picks one already in the
+     * library. Every route registers the file as an asset, and the field
+     * stores a plain path, which components resolve with cms_media().
      */
     public static function image(string $name = 'image', string $directory = 'components'): FileUpload
     {
@@ -65,56 +67,123 @@ class CmsFields
             ->visibility('public')
             ->imageEditor()
             ->maxSize(8192)
-            ->saveUploadedFileUsing(function (BaseFileUpload $component, TemporaryUploadedFile $file): ?string {
-                $path = $component->saveUploadedFile($file);
-
-                if ($path) {
-                    Asset::register($path, $component->getDiskName(), [
-                        'name' => Str::headline(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)),
-                        'group' => 'Uploads',
-                    ]);
-                }
-
-                return $path;
-            })
+            ->saveUploadedFileUsing(static::registerUpload(...))
             ->hintAction(static::chooseAssetAction());
     }
 
     /**
+     * Store an upload and list it in the asset library.
+     *
+     * Registering on the way past is what makes every image reusable: an
+     * editor who uploads a photograph on one screen finds it in the picker on
+     * the next, without a separate trip to the Assets screen.
+     */
+    public static function registerUpload(BaseFileUpload $component, TemporaryUploadedFile $file): ?string
+    {
+        $path = $component->saveUploadedFile($file);
+
+        if ($path) {
+            Asset::register($path, $component->getDiskName(), [
+                'name' => Str::headline(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)),
+                'group' => 'Uploads',
+            ]);
+        }
+
+        return $path;
+    }
+
+    /**
      * Opens the asset library and puts the chosen file into the field.
+     *
+     * The same modal also uploads, because "the image I want is on my
+     * computer" is the other half of choosing one, and leaving the modal to
+     * find the field's own upload area is a detour with nothing at the end of
+     * it that this cannot do.
      */
     public static function chooseAssetAction(): Action
     {
         return Action::make('chooseAsset')
-            ->label('Choose from assets')
+            ->label('Choose an image')
             ->icon(Heroicon::OutlinedPhoto)
-            ->modalHeading('Choose from the asset library')
+            ->modalHeading('Choose an image')
+            ->modalDescription('Pick one from the library, or upload a new one — an upload joins the library too.')
             ->modalSubmitActionLabel('Use this image')
             ->modalWidth(Width::TwoExtraLarge)
             ->schema([
+                FileUpload::make('upload')
+                    ->label('Upload from your computer')
+                    ->image()
+                    ->disk(fn (): string => config('cms.media.disk'))
+                    ->directory(fn (): string => trim(config('cms.media.images') . '/' . config('cms.assets.directory', 'assets'), '/'))
+                    ->visibility('public')
+                    ->imageEditor()
+                    ->maxSize(8192)
+                    ->saveUploadedFileUsing(static::registerUpload(...))
+                    ->live(),
                 Select::make('group')
                     ->label('Group')
                     ->placeholder('All groups')
                     ->options(fn (): array => array_combine(Asset::groups(), Asset::groups()) ?: [])
-                    ->live(),
+                    ->live()
+                    ->visible(fn (Get $get): bool => ! static::hasUpload($get('upload'))),
                 Select::make('asset')
-                    ->label('Image')
-                    ->required()
+                    // The library's name is picked out, so the two ways in —
+                    // upload above, library below — read as one choice.
+                    ->label(new HtmlString('Or choose from <span style="color:#ca8a04;font-weight:600;">assets library</span>'))
+                    // Only when nothing was uploaded, or the modal would
+                    // refuse to close on a perfectly good upload.
+                    ->required(fn (Get $get): bool => ! static::hasUpload($get('upload')))
+                    ->visible(fn (Get $get): bool => ! static::hasUpload($get('upload')))
                     ->searchable()
                     ->allowHtml()
                     ->options(fn (Get $get): array => static::assetOptions($get('group')))
                     ->getSearchResultsUsing(fn (string $search, Get $get): array => static::assetOptions($get('group'), $search))
-                    ->getOptionLabelUsing(fn ($value): ?string => ($asset = Asset::query()->find($value)) ? static::assetLabel($asset) : null)
-                    ->helperText('Upload new files on the Assets screen, or straight into this field from your computer.'),
+                    ->getOptionLabelUsing(fn ($value): ?string => ($asset = Asset::query()->find($value)) ? static::assetLabel($asset) : null),
             ])
             ->action(function (array $data, FileUpload $component): void {
-                $asset = Asset::query()->find($data['asset']);
+                $path = static::uploadedPath($data['upload'] ?? null, $component)
+                    ?? Asset::query()->find($data['asset'] ?? null)?->path;
 
-                if ($asset) {
+                if ($path) {
                     // The upload field holds its files keyed by a uuid.
-                    $component->state([(string) Str::uuid() => $asset->path]);
+                    $component->state([(string) Str::uuid() => $path]);
                 }
             });
+    }
+
+    /**
+     * Whether the picker is holding an image to use — one already stored, or
+     * one still on its way up. Both count, or the modal would go on asking
+     * for a library image while a perfectly good upload sits above it.
+     */
+    protected static function hasUpload(mixed $state): bool
+    {
+        $value = static::single($state);
+
+        return $value instanceof TemporaryUploadedFile || filled(Media::path($value));
+    }
+
+    /**
+     * The path for whatever the picker is holding, storing an upload as it
+     * goes — through the field that opened the picker, so a file uploaded
+     * here lands where that field's own uploads land and joins the library
+     * the same way.
+     */
+    protected static function uploadedPath(mixed $state, FileUpload $target): ?string
+    {
+        $value = static::single($state);
+
+        return $value instanceof TemporaryUploadedFile
+            ? static::registerUpload($target, $value)
+            : Media::path($value);
+    }
+
+    /**
+     * An upload field carries its files as a [uuid => file] array.
+     */
+    protected static function single(mixed $state): mixed
+    {
+        return is_array($state) ? collect($state)->first(fn ($item): bool => filled($item)) : $state;
     }
 
     /**

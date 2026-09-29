@@ -2,6 +2,7 @@
 
 namespace Cms\Providers;
 
+use Cms\Filament\Pages\SiteSettings;
 use Cms\Filament\Resources\Admins\AdminResource;
 use Cms\Filament\Resources\Assets\AssetResource;
 use Cms\Filament\Resources\BlogCategories\BlogCategoryResource;
@@ -84,6 +85,9 @@ class CmsPanelProvider extends PanelProvider
             ])
             ->pages([
                 Dashboard::class,
+                // The values shared across the site. It hides itself when the
+                // host declares none; see cms.settings.
+                SiteSettings::class,
                 ...config('cms.panel.pages', []),
             ])
             ->widgets([

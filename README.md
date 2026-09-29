@@ -13,7 +13,8 @@ into the host's `config/auth.php`, routes or controllers.
 src/
   Cms.php                  read API used by the public site
   Facades/Cms.php          Cms:: facade over the above
-  helpers.php              global functions for Blade (setting(), pagedata()…)
+  helpers.php              global functions for Blade (setting(), site_text(), pagedata()…)
+  Settings/                shared site settings: the config-described screen, and tokens
   CmsServiceProvider.php   migrations, config, admin guard, console commands
   Providers/
     CmsPanelProvider.php   the Filament panel; lists every resource explicitly
@@ -215,7 +216,7 @@ Cms::blogs();                // published posts
 Cms::blogsPage($categoryId); // a paginated page of posts
 Cms::recentBlogs(2);
 Cms::categories();
-Cms::setting('footer.email', $default);
+Cms::setting('site.email');  // the default declared in cms.settings, if unset
 Cms::recordVisit($url);
 ```
 
@@ -225,7 +226,8 @@ Cms::recordVisit($url);
 plain functions without importing anything:
 
 ```blade
-{{ setting('footer.email', 'info@example.com') }}
+{{ setting('site.email') }}
+{{ site_text($someText) }}   {{-- resolves {phone}, {email}, … --}}
 @foreach (menu() as $item) ... @endforeach
 @foreach (footer_menu()['links'] ?? [] as $link) ... @endforeach
 {{ cms_image($element->value, 'assets/img/fallback.jpg') }}
@@ -237,6 +239,86 @@ composer.json, since the root package's `files` are the ones that load:
 ```json
 "autoload": { "files": ["packages/cms/src/helpers.php"] }
 ```
+
+## Shared settings
+
+`site_settings` is a key/value store for values read all over a site but owned
+by no page — the phone number, the email address, the offices. The store, the
+screen that edits them and the token substitution are package infrastructure;
+*which* values a site keeps is the site's own business, so the host declares
+them in `cms.settings`:
+
+```php
+'settings' => [
+    'sections' => [
+        'contact' => [
+            'heading' => 'Contact details',
+            'columns' => 2,
+            'fields' => [
+                'site.phone' => ['type' => 'tel', 'label' => 'Phone', 'default' => '0330 999 6666'],
+                'site.offices' => [
+                    'type' => 'repeater',
+                    'item_label' => 'name',
+                    'schema' => ['name' => [], 'address' => ['type' => 'textarea']],
+                ],
+            ],
+        ],
+    ],
+    'tokens' => ['phone' => 'site.phone'],
+],
+```
+
+Field types: `text` (default), `email`, `url`, `tel`, `textarea`, `image`,
+`toggle`, `select`, `repeater`. The Settings screen hides itself when a host
+declares no sections, so the package ships no site's keys.
+
+`default` is the wording the theme shipped with. `setting('site.phone')` with
+no fallback argument returns it when nothing is saved, so the default lives in
+one place rather than in every template that reads the value.
+
+`tokens` names the settings an editor may write into page content. With
+`'phone' => 'site.phone'`, any component's text may say `{phone}`, and
+`ComponentRenderer` resolves it as the page renders — so a change on the
+Settings screen reaches sections written long after the value moved. Values are
+HTML-escaped; list-valued settings are not tokens. `site_text()` applies the
+same substitution in a hand-written view.
+
+A host's own components should keep the "blank means global" rule: give the
+component an optional field, hand the view only what was filled in, and let the
+view fall back with `$phone ?? setting('site.phone')`. An editor then overrides
+a value for one page without detaching it everywhere.
+
+### Placing a section on a page
+
+A section may name a component type, which makes it placeable:
+
+```php
+'component' => ['type' => 'offices', 'handle' => 'shared-offices', 'name' => 'Offices'],
+```
+
+The Settings screen then shows the same bookmark a builder item has — "Save to
+the component library for reuse" — and filing it there makes it placeable on any
+page or layout, as often as wanted.
+
+The library row is created with **no data of its own**. A library component
+normally carries its stored data; this one carries none, so it reads the shared
+settings as it renders and every placement follows the Settings screen instead
+of freezing a copy. A placement that should differ fills in its own fields, or
+takes a copy from the library.
+
+`SettingsSchema::saveSectionToLibrary($section, $data)` does the work, so a host
+can file one from a seeder or command without driving the panel.
+
+A host may add an intermediate layer for a piece of chrome that appears on every
+page — this site's footer does, so its screen can override the shared phone
+number for the footer alone:
+
+```blade
+$phone = $phone ?? (setting('footer.phone') ?: setting('site.phone'));
+```
+
+Show the shared value as the field's placeholder, so an editor can see that
+leaving it blank means following Settings rather than rendering nothing.
 
 Every helper is wrapped in `function_exists`, so an application that already
 defines one of these names keeps its own.
