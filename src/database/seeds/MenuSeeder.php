@@ -38,6 +38,8 @@ class MenuSeeder extends Seeder
             'vehicles/6x6',
             'vehicles/rrvs',
             'vehicles/control-vehicles',
+            'vehicles/quads',
+            'vehicles/x-ray-unit',
         ]],
         'why-choose-us' => [null, []],
         'gallery' => [null, []],
