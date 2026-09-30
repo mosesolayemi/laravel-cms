@@ -38,6 +38,7 @@ class MenuSeeder extends Seeder
             'vehicles/6x6',
             'vehicles/rrvs',
             'vehicles/control-vehicles',
+            'vehicles/z8',
             'vehicles/quads',
             'vehicles/x-ray-unit',
         ]],
