@@ -2,12 +2,14 @@
 
 namespace Cms\Filament\Support;
 
+use Closure;
 use Cms\Models\Assets\Asset;
 use Cms\Support\Media;
 use Filament\Actions\Action;
 use Filament\Forms\Components\BaseFileUpload;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Enums\Width;
@@ -48,6 +50,58 @@ class CmsFields
             ->label($label)
             ->default(false)
             ->dehydrateStateUsing(fn ($state): string => $state ? '1' : '0');
+    }
+
+    /**
+     * The group a library record is filed under — an asset, a component.
+     *
+     * A group is not a record of its own: it is whatever string the things in
+     * it share. So the dropdown lists the groups in use, and + starts a new
+     * one, which only has to hand back a name. Free text alone was the older
+     * shape, and it files a second group on any typo; a dropdown alone cannot
+     * name a group that does not exist yet. Both are needed.
+     *
+     * @param  callable(): array<int, string>  $existing  the groups in use
+     */
+    public static function group(callable $existing, ?string $help = null, string $name = 'group'): Select
+    {
+        return Select::make($name)
+            ->options(function (Get $get) use ($existing, $name): array {
+                $groups = $existing();
+
+                // A group just created, or one whose records have since moved
+                // away, is still the selected value; without it in the list
+                // the field renders empty and quietly loses the choice.
+                $current = $get($name);
+
+                if (filled($current) && ! in_array($current, $groups, true)) {
+                    $groups[] = $current;
+                }
+
+                return array_combine($groups, $groups);
+            })
+            ->searchable()
+            ->placeholder('No group')
+            ->helperText($help ?? 'Pick a group, or use + to start a new one.')
+            ->createOptionForm([
+                TextInput::make('name')
+                    ->label('Group name')
+                    ->required()
+                    ->maxLength(255)
+                    ->rule(static fn (): Closure => static function (string $attribute, $value, Closure $fail) use ($existing): void {
+                        $clash = collect($existing())
+                            ->first(fn (string $group): bool => mb_strtolower($group) === mb_strtolower(trim((string) $value)));
+
+                        // Two groups differing only in case read as one to an
+                        // editor but file separately, so the near-miss is
+                        // stopped at the point it is made.
+                        if ($clash !== null) {
+                            $fail("“{$clash}” already exists — pick it from the list instead.");
+                        }
+                    }),
+            ])
+            ->createOptionModalHeading('New group')
+            ->createOptionUsing(fn (array $data): string => trim($data['name']));
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Cms\Filament\Support;
 use Cms\Components\ComponentRegistry;
 use Cms\Components\ComponentType;
 use Cms\Filament\Resources\Components\ComponentResource;
+use Cms\Filament\Support\CmsFields;
 use Cms\Models\Components\Component;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Builder;
@@ -310,10 +311,10 @@ class ComponentBuilder
                     ->required()
                     ->maxLength(255)
                     ->helperText('How it is listed in the library, e.g. “Call to action — events”.'),
-                TextInput::make('group')
-                    ->datalist(fn (): array => Component::groups())
-                    ->maxLength(255)
-                    ->helperText('Where it is filed in the library. Starts as the page (or layout) it came from.'),
+                CmsFields::group(
+                    fn (): array => Component::groups(),
+                    'Where it is filed in the library. Starts as the page (or layout) it came from; use + for a new one.',
+                ),
                 Textarea::make('description')->rows(2),
             ])
             ->fillForm(fn (Builder $component): array => ['group' => static::sourceGroup($component)])
