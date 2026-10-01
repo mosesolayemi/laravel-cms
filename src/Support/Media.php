@@ -29,6 +29,15 @@ class Media
 
             $path = ltrim($path, '/');
 
+            // A seeded image is served from the repository whenever the file
+            // is still there, because that file is the one we version and the
+            // media disk is not. Deploying is then a plain `git pull`: the
+            // photograph that arrives with the pull is the one the page
+            // shows, with nothing to re-run afterwards.
+            if ($repo = static::shipped($path)) {
+                return asset($repo);
+            }
+
             if (static::disk()->exists($path)) {
                 return static::disk()->url($path);
             }
@@ -51,6 +60,87 @@ class Media
         }
 
         return is_string($value) && filled($value) ? $value : null;
+    }
+
+    /**
+     * The file under public/ a seeded disk path was copied from, if it is
+     * still in the repository.
+     *
+     * import() flattens the source path into the file name, turning
+     * "assets/images/team/team-1-1.jpg" into "images/site/team-team-1-1.jpg",
+     * and that cannot be read backwards on its own — a folder may have a dash
+     * in its name just as a file may. So the folders that exist are tried as
+     * prefixes, longest first, and the first one whose file is really there
+     * wins.
+     *
+     * Only the seeded folder is considered. An editor's upload is stored
+     * under a different folder with a name of its own, so replacing a seeded
+     * image in the panel still wins over the file it originally came from.
+     */
+    protected static function shipped(string $path): ?string
+    {
+        $seeded = trim(config('cms.media.images', 'images') . '/site', '/') . '/';
+
+        if (! Str::startsWith($path, $seeded)) {
+            return null;
+        }
+
+        $name = Str::after($path, $seeded);
+
+        foreach (static::themeFolders() as $folder) {
+            $prefix = str_replace('/', '-', $folder) . '-';
+
+            if ($folder !== '' && ! Str::startsWith($name, $prefix)) {
+                continue;
+            }
+
+            $candidate = 'assets/images/'
+                . ($folder === '' ? $name : $folder . '/' . Str::after($name, $prefix));
+
+            if (File::exists(public_path($candidate))) {
+                return $candidate;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Every folder under public/assets/images, deepest first, plus the root.
+     *
+     * Only the folders are listed, never the files, so this stays cheap
+     * enough to do once a request rather than being cached — a cache would
+     * only go stale the moment a deploy added a folder.
+     *
+     * @return array<int, string>
+     */
+    protected static function themeFolders(): array
+    {
+        static $folders = null;
+
+        if ($folders !== null) {
+            return $folders;
+        }
+
+        $root = public_path('assets/images');
+
+        if (! File::isDirectory($root)) {
+            return $folders = [];
+        }
+
+        $found = [];
+        $queue = File::directories($root);
+
+        while ($queue) {
+            $path = array_pop($queue);
+            $found[] = str_replace('\\', '/', Str::after($path, $root . DIRECTORY_SEPARATOR));
+            array_push($queue, ...File::directories($path));
+        }
+
+        $found[] = '';
+        usort($found, fn (string $a, string $b): int => strlen($b) <=> strlen($a));
+
+        return $folders = $found;
     }
 
     /**
