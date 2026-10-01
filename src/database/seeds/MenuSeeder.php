@@ -31,6 +31,7 @@ class MenuSeeder extends Seeder
             'services/sporting-events',
             'services/motorsport',
             'services/water-sports',
+            'services/fight-events',
         ]],
         'vehicles' => [null, [
             'vehicles/ambulances',
@@ -58,6 +59,7 @@ class MenuSeeder extends Seeder
             'services/motorsport' => null,
             'services/water-sports' => null,
             'why-choose-us' => null,
+            'services/fight-events' => null,
         ],
         'links' => [
             'about' => 'About Us',
