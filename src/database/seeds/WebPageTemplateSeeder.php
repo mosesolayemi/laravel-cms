@@ -229,7 +229,7 @@ class WebPageTemplateSeeder extends Seeder
                 'footer_position'  => 'services',
                 'page_order'       => 6,
                 'footer_order'     => 12,
-                'status'           => 1,
+                'status'           => 0,   // hidden until the client supplies fight event photographs
             ],
             [
                 'title'            => 'Vehicles',
