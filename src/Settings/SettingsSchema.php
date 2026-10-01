@@ -186,10 +186,10 @@ class SettingsSchema
                     ->required()
                     ->maxLength(255)
                     ->helperText('How it is listed in the library.'),
-                TextInput::make('group')
-                    ->datalist(fn (): array => Component::groups())
-                    ->maxLength(255)
-                    ->helperText('Where it is filed in the library.'),
+                CmsFields::group(
+                    fn (): array => Component::groups(),
+                    'Where it is filed in the library. Pick a group, or use + to start a new one.',
+                ),
                 Textarea::make('description')->rows(2),
             ])
             ->fillForm(fn (): array => [

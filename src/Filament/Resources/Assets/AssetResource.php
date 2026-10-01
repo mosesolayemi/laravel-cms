@@ -3,10 +3,12 @@
 namespace Cms\Filament\Resources\Assets;
 
 use BackedEnum;
+use Closure;
 use Cms\Filament\Resources\Assets\Pages\ManageAssets;
 use Cms\Filament\Resources\Components\ComponentResource;
 use Cms\Filament\Resources\Layouts\LayoutResource;
 use Cms\Filament\Resources\Pages\PageResource;
+use Cms\Filament\Support\CmsFields;
 use Cms\Models\Assets\Asset;
 use Cms\Models\Components\Component;
 use Cms\Models\Pages\Templates;
@@ -16,10 +18,12 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Text;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\ImageColumn;
@@ -65,13 +69,12 @@ class AssetResource extends Resource
         ])->columns(1);
     }
 
-    public static function groupField(): TextInput
+    public static function groupField(): Select
     {
-        return TextInput::make('group')
-            ->datalist(fn (): array => Asset::groups())
-            ->placeholder('No group')
-            ->maxLength(255)
-            ->helperText('Pick an existing group or type a new one.');
+        return CmsFields::group(
+            fn (): array => Asset::groups(),
+            'Files the asset in the library. Pick a group, or use + to start a new one.',
+        );
     }
 
     public static function table(Table $table): Table
@@ -102,6 +105,10 @@ class AssetResource extends Resource
                     TextColumn::make('group')
                         ->badge()
                         ->color('gray')
+                        // The badge is on screen, so it is what an editor
+                        // types to find a file again; searching only the name
+                        // returned nothing for a group they could plainly see.
+                        ->searchable()
                         ->placeholder('No group'),
                 ])->space(2),
             ])

@@ -92,11 +92,10 @@ class ComponentForm
                 ->disabledOn('edit')
                 ->helperText(fn (string $operation): ?string => $operation === 'edit' ? 'Fixed once created.' : null),
 
-            TextInput::make('group')
-                ->datalist(fn (): array => Component::groups())
-                ->placeholder('No group')
-                ->maxLength(255)
-                ->helperText('Organises the library, e.g. “Home page” or “Calls to action”. Pick an existing group or type a new one.'),
+            CmsFields::group(
+                fn (): array => Component::groups(),
+                'Organises the library, e.g. “Home page” or “Calls to action”. Pick a group, or use + to start a new one.',
+            ),
 
             Textarea::make('description')
                 ->rows(2)

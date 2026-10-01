@@ -37,6 +37,10 @@ class ComponentsTable
                     ->placeholder('—')
                     ->badge()
                     ->color('gray')
+                    // Searchable even while the column is hidden: the group is
+                    // how an editor thinks of where a component lives, and a
+                    // search for one should not depend on a toggle.
+                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('handle')
                     ->visibleFrom('md')
