@@ -34,6 +34,7 @@ class Asset extends Model
         'height',
         'alt',
         'managed',
+        'seeded_hash',
     ];
 
     protected function casts(): array
@@ -53,6 +54,29 @@ class Asset extends Model
      *
      * @param  array<string, mixed>  $attributes  name, group, alt, managed
      */
+    /**
+     * Note that an editor has written over a file the seeder put here.
+     *
+     * Seeded images carry the hash of what the seeder wrote. Clearing it says
+     * the file is the editor's now, which is what stops the next deploy
+     * copying the repository's version back over their upload, and what stops
+     * the page serving the repository's version in preference to it.
+     */
+    public static function claim(string $path, ?string $disk = null): void
+    {
+        $disk ??= config('cms.media.disk', 'public');
+
+        if (! static::libraryExists()) {
+            return;
+        }
+
+        static::query()
+            ->where('disk', $disk)
+            ->where('path', ltrim($path, '/'))
+            ->whereNotNull('seeded_hash')
+            ->update(['seeded_hash' => null]);
+    }
+
     public static function register(string $path, ?string $disk = null, array $attributes = []): ?self
     {
         $disk ??= config('cms.media.disk', 'public');
@@ -67,6 +91,15 @@ class Asset extends Model
         // A file already in the library keeps the name and group an editor
         // may have given it.
         if ($asset->exists) {
+            // Except that the file itself may have just been replaced. Every
+            // route an upload can take ends here, so this is the one place
+            // that reliably notices, and noticing is what keeps the next
+            // deploy from copying the repository's version back over it.
+            if ($asset->seeded_hash !== null
+                && hash('sha256', Storage::disk($disk)->get($path)) !== $asset->seeded_hash) {
+                $asset->forceFill(['seeded_hash' => null])->save();
+            }
+
             return $asset;
         }
 

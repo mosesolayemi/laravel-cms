@@ -137,6 +137,10 @@ class CmsFields
         $path = $component->saveUploadedFile($file);
 
         if ($path) {
+            // Uploading over an image the theme shipped makes it the editor's,
+            // so a deploy stops copying the repository's version back over it.
+            Asset::claim($path, $component->getDiskName());
+
             Asset::register($path, $component->getDiskName(), [
                 'name' => Str::headline(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)),
                 'group' => 'Uploads',
