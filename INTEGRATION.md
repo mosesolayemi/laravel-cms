@@ -87,7 +87,8 @@ point you want already exists — look in `src/config/cms.php` first.
 "require": {
     "php": "^8.2",
     "filament/filament": "^5.0",
-    "illuminate/support": "^12.0"
+    "illuminate/support": "^12.0|^13.0",
+    "intervention/image": "^4.0"
 }
 ```
 
