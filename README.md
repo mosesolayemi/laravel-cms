@@ -7,6 +7,12 @@ The package owns everything the back office needs. A host application
 registers one provider and gets a working panel; nothing about the CMS leaks
 into the host's `config/auth.php`, routes or controllers.
 
+> **Integrating this into another application?** Read
+> **[INTEGRATION.md](INTEGRATION.md)** — the full reference: installation, every
+> configuration key, the database schema, how a page is served, the component
+> contract, settings and tokens, media, previews, publishing, seeding, every
+> command, and the invariants that bite. This README is the short tour.
+
 ## Layout
 
 ```

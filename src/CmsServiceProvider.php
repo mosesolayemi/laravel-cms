@@ -95,7 +95,7 @@ class CmsServiceProvider extends ServiceProvider
         // Place a library component in any Blade view: @cmsComponent('site-cta').
         // Inside a CMS page the component knows which page it is on.
         Blade::directive('cmsComponent', fn (string $expression): string => "<?php echo cms_component({$expression}, "
-            . '(($page ?? null) instanceof \\Cms\\Models\\Pages\\Templates ? $page : null)); ?>');
+            . '(($page ?? null) instanceof \\YourVendor\\Cms\\Models\\Pages\\Templates ? $page : null)); ?>');
 
         // Used by pages published with cms:publish-page.
         foreach (Sections::directives() as $name => $compiler) {
