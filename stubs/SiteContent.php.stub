@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Cms;
+
+use PhynixMedia\Cms\Content\ContentDefinition;
+
+/**
+ * This site's content, as code.
+ *
+ * Everything returned here is loaded into the database by
+ * `php artisan cms:seed-components` (and by `db:seed`), keyed by a stable
+ * handle, so a fresh checkout rebuilds the whole site with one command and
+ * running it twice updates rather than duplicates.
+ *
+ * Editors' changes are left alone unless the command is given --force.
+ */
+class SiteContent implements ContentDefinition
+{
+    /**
+     * Library components, keyed by handle.
+     */
+    public function components(): array
+    {
+        return [];
+    }
+
+    /**
+     * Layouts, keyed by handle.
+     */
+    public function layouts(): array
+    {
+        return [];
+    }
+
+    /**
+     * Page content, keyed by page URL.
+     */
+    public function pages(): array
+    {
+        return [];
+    }
+}

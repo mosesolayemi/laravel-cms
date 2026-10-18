@@ -6,6 +6,7 @@ use PhynixMedia\Cms\Auth\Console\MakeAdminCommand;
 use PhynixMedia\Cms\Components\ComponentRegistry;
 use PhynixMedia\Cms\Components\Types;
 use PhynixMedia\Cms\Console\ImportAssetsCommand;
+use PhynixMedia\Cms\Console\InstallCommand;
 use PhynixMedia\Cms\Console\PublishComponentCommand;
 use PhynixMedia\Cms\Console\PublishPageCommand;
 use PhynixMedia\Cms\Console\SeedComponentsCommand;
@@ -81,6 +82,7 @@ class CmsServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
+                InstallCommand::class,
                 MakeAdminCommand::class,
                 SeedComponentsCommand::class,
                 PublishPageCommand::class,

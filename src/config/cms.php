@@ -292,6 +292,34 @@ return [
     |
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | Page routing
+    |--------------------------------------------------------------------------
+    |
+    | The package registers a fallback route so a fresh installation serves
+    | its pages with nothing added to the host's routes/web.php. Laravel only
+    | reaches a fallback after every real route has failed, so a host that
+    | defines its own page route simply keeps it.
+    |
+    | Turn `pages` off if the host serves pages entirely on its own terms.
+    |
+    */
+
+    'routing' => [
+        'pages' => env('CMS_ROUTE_PAGES', true),
+        'home' => 'home',
+        'middleware' => ['web'],
+
+        /*
+         * Pages are looked up by their full path ('vehicles/ambulances').
+         * Turn this on if the site keys them by the last segment instead —
+         * at the cost of any unmatched URL being able to resolve to a page
+         * anywhere in the tree.
+         */
+        'match_last_segment' => false,
+    ],
+
     'preview' => [
         'path' => 'cms-preview',
         'middleware' => ['web'],

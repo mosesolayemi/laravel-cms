@@ -1,5 +1,5 @@
 {
-    "name": "ambulance/cms",
+    "name": "phynixmedia/cms",
     "description": "Self-contained CMS: content models, admin guard and Filament back office.",
     "type": "library",
     "license": "proprietary",

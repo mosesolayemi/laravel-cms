@@ -1,0 +1,69 @@
+<?php
+
+use App\Cms\SiteContent;
+
+/*
+|--------------------------------------------------------------------------
+| CMS overrides for this site
+|--------------------------------------------------------------------------
+|
+| Only the values this application changes. Everything else is inherited from
+| the package's own config, which CmsServiceProvider merges underneath this —
+| deeply, so setting one nested key here does not drop its siblings.
+|
+| The full list of defaults is in the package: src/config/cms.php.
+|
+*/
+
+return [
+
+    'panel' => [
+        // Where the back office lives, and how it looks.
+        // 'path' => 'admin',
+        // 'primary' => '#2C51A3',
+        // 'logo' => 'assets/images/logo.png',
+
+        // Filament resources and pages for content that belongs to this site
+        // rather than to the CMS itself.
+        'resources' => [],
+        'pages' => [],
+    ],
+
+    /*
+     * This site's component types — the sections its pages are built from.
+     * A type registered under a handle the package already ships replaces
+     * the package's version, which is how a site re-skins 'rich-text'
+     * without forking it.
+     */
+    'components' => [
+        'types' => [
+            // App\Cms\Components\Hero::class,
+        ],
+    ],
+
+    /*
+     * The Blade view wrapping every CMS page. The package ships a plain one
+     * at 'cms::shell'; point this at your own once you have a theme.
+     */
+    'rendering' => [
+        // 'shell' => 'web.shell',
+    ],
+
+    /*
+     * This site's own pages, layouts and menus. The package ships no content,
+     * so anything that makes up *this* site is seeded from here, by
+     * CmsDatabaseSeeder, before the content installer fills the pages in.
+     */
+    'seeding' => [
+        'seeders' => [],
+    ],
+
+    /*
+     * Seeded by `php artisan cms:seed-components` and `php artisan db:seed`.
+     */
+    'content' => [
+        PhynixMedia\Cms\Content\CoreContent::class,
+        SiteContent::class,
+    ],
+
+];
