@@ -1,5 +1,5 @@
 {
-    "name": "phynixmedia/laravel-cms",
+    "name": "mosesolayemi/laravel-cms",
     "description": "A self-contained CMS for Laravel: content models, a page builder, its own admin guard and a Filament back office.",
     "type": "library",
     "keywords": [
@@ -9,7 +9,7 @@
         "page-builder",
         "content-management"
     ],
-    "homepage": "https://github.com/PhynixMedia/laravel-cms",
+    "homepage": "https://github.com/mosesolayemi/laravel-cms",
     "license": "proprietary",
     "authors": [
         {
@@ -18,8 +18,8 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/PhynixMedia/laravel-cms/issues",
-        "source": "https://github.com/PhynixMedia/laravel-cms"
+        "issues": "https://github.com/mosesolayemi/laravel-cms/issues",
+        "source": "https://github.com/mosesolayemi/laravel-cms"
     },
     "require": {
         "php": "^8.2",

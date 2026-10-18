@@ -97,8 +97,8 @@ The package is private, distributed through Phynix Media's Private Packagist
 repository. Register the repository once per application, then require it:
 
 ```bash
-composer config repositories.phynixmedia composer https://repo.packagist.com/phynixmedia/
-composer require phynixmedia/laravel-cms
+composer config repositories.mosesolayemi composer https://repo.packagist.com/mosesolayemi/
+composer require mosesolayemi/laravel-cms
 php artisan cms:install
 ```
 
@@ -1033,8 +1033,8 @@ The host adds its own screens through `cms.panel.resources`, `.pages`,
 For a new Laravel application:
 
 ```bash
-composer config repositories.phynixmedia composer https://repo.packagist.com/phynixmedia/
-composer require phynixmedia/laravel-cms
+composer config repositories.mosesolayemi composer https://repo.packagist.com/mosesolayemi/
+composer require mosesolayemi/laravel-cms
 php artisan cms:install
 ```
 

@@ -14,8 +14,8 @@ This is a private package, distributed through Phynix Media's Private
 Packagist repository. Add it once per application:
 
 ```bash
-composer config repositories.phynixmedia composer https://repo.packagist.com/phynixmedia/
-composer require phynixmedia/laravel-cms
+composer config repositories.mosesolayemi composer https://repo.packagist.com/mosesolayemi/
+composer require mosesolayemi/laravel-cms
 php artisan cms:install
 ```
 
@@ -449,14 +449,14 @@ Builder pages render through `cms::page`, which `@extends` the layout's shell
 (or `cms.rendering.shell`, falling back to the package's bare `cms::shell`).
 A shell is any view that yields:
 
-| Yield / stack     | Filled with                                    |
-|-------------------|------------------------------------------------|
-| `title`           | the page's meta title, else its title          |
-| `meta_description`| the page's meta description, if set            |
-| `cms_header`      | the layout's header region                     |
-| `content`         | before-content, the page, after-content        |
-| `cms_footer`      | the layout's footer region                     |
-| `@stack('cms_head')`, `@stack('cms_body_end')`, `@stack('scripts')` | whatever components push |
+| Yield / stack                                                             | Filled with                             |
+| ------------------------------------------------------------------------- | --------------------------------------- |
+| `title`                                                                 | the page's meta title, else its title   |
+| `meta_description`                                                      | the page's meta description, if set     |
+| `cms_header`                                                            | the layout's header region              |
+| `content`                                                               | before-content, the page, after-content |
+| `cms_footer`                                                            | the layout's footer region              |
+| `@stack('cms_head')`, `@stack('cms_body_end')`, `@stack('scripts')` | whatever components push                |
 
 Components are rendered from inside `cms::page`, so a component view can
 `@push` a script and the shell's stack receives it.
@@ -522,8 +522,7 @@ markup, variables and all:
 `@cmsSection` runs the data through the component type, so anything it works
 out at render time (a gallery read from the database, an image URL) stays
 live, and removes the section's variables afterwards so none leak into the
-next section's `?? ''` defaults. `--compact` writes `@cmsBlock('intro',
-$__cmsData)` instead: the section renders exactly as in the CMS, and markup
+next section's `?? ''` defaults. `--compact` writes `@cmsBlock('intro', $__cmsData)` instead: the section renders exactly as in the CMS, and markup
 can be added around it. Library components are placed with
 `@cmsComponent('handle')`, so they stay shared.
 
