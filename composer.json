@@ -45,6 +45,19 @@
             }
         }
     },
+    "scripts": {
+        "test": [
+            "@test:dependencies",
+            "@test:install"
+        ],
+        "test:dependencies": "php tests/check-dependencies.php",
+        "test:install": "tests/install.sh"
+    },
+    "scripts-descriptions": {
+        "test": "Run every check: the dependency audit, then a real install on each supported Laravel major.",
+        "test:dependencies": "Fail if src/ imports a namespace composer.json does not pay for. Instant.",
+        "test:install": "Install the package into a throwaway Laravel application and exercise it. Several minutes."
+    },
     "minimum-stability": "stable",
     "prefer-stable": true,
     "config": {

@@ -54,7 +54,20 @@ tour.
 
 ## Requirements
 
-PHP 8.2+, Laravel 12 or 13, Filament 5.
+PHP 8.2+, Laravel 12 or 13, Filament 5. Image handling needs the `gd` or
+`imagick` extension.
+
+## Tests
+
+```bash
+composer test
+```
+
+Two checks, both asking whether the package works for an application that
+requires nothing but the package: a static audit of what `src/` imports
+against what `composer.json` pays for, and a real install into a throwaway
+Laravel app on each supported major. See **[tests/README.md](tests/README.md)**
+— including the one thing to update when a new Laravel major is supported.
 
 ## License
 
