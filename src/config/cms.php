@@ -314,6 +314,14 @@ return [
     */
 
     'seeding' => [
+        /*
+         * The host's own seeders, run by CmsDatabaseSeeder after the live-site
+         * guard has taken its reading and before the content installer. A
+         * site's pages, layouts and menus belong here rather than in the
+         * package, which ships no content of its own.
+         */
+        'seeders' => [],
+
         'media' => env('CMS_SEED_MEDIA', true),
         'overwrite_live' => env('CMS_SEED_OVERWRITE', false),
     ],

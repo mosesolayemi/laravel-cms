@@ -1,5 +1,7 @@
 <?php
 
+namespace PhynixMedia\Cms\Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 

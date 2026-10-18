@@ -1,5 +1,7 @@
 <?php
 
+namespace PhynixMedia\Cms\Database\Seeders;
+
 use PhynixMedia\Cms\Content\ContentInstaller;
 use Illuminate\Database\Seeder;
 

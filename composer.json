@@ -12,9 +12,6 @@
         "psr-4": {
             "PhynixMedia\\Cms\\": "src/"
         },
-        "classmap": [
-            "src/database/seeds"
-        ],
         "files": [
             "src/helpers.php"
         ]

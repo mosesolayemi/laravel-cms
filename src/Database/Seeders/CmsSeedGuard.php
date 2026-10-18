@@ -1,5 +1,7 @@
 <?php
 
+namespace PhynixMedia\Cms\Database\Seeders;
+
 use PhynixMedia\Cms\Models\Pages\Templates;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
