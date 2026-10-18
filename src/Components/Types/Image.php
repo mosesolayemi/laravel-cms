@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Components\Types;
+namespace PhynixMedia\Cms\Components\Types;
 
-use Cms\Components\ComponentType;
-use Cms\Filament\Support\CmsFields;
-use Cms\Rendering\RenderContext;
+use PhynixMedia\Cms\Components\ComponentType;
+use PhynixMedia\Cms\Filament\Support\CmsFields;
+use PhynixMedia\Cms\Rendering\RenderContext;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;

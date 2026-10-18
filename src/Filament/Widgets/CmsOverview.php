@@ -1,11 +1,11 @@
 <?php
 
-namespace Cms\Filament\Widgets;
+namespace PhynixMedia\Cms\Filament\Widgets;
 
-use Cms\Models\Blogs\Blogs;
-use Cms\Models\Pages\PageVisit;
-use Cms\Models\Pages\Templates;
-use Cms\Models\Pages\WebEnquiry;
+use PhynixMedia\Cms\Models\Blogs\Blogs;
+use PhynixMedia\Cms\Models\Pages\PageVisit;
+use PhynixMedia\Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Models\Pages\WebEnquiry;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 

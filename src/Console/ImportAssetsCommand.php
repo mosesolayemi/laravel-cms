@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Console;
+namespace PhynixMedia\Cms\Console;
 
-use Cms\Models\Assets\Asset;
+use PhynixMedia\Cms\Models\Assets\Asset;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Content;
+namespace PhynixMedia\Cms\Content;
 
-use Cms\Components\ComponentRegistry;
+use PhynixMedia\Cms\Components\ComponentRegistry;
 
 /**
  * Builds builder items for content definitions.

@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Filament\Resources\PageVisits;
+namespace PhynixMedia\Cms\Filament\Resources\PageVisits;
 
 use BackedEnum;
-use Cms\Filament\Resources\PageVisits\Pages\ListPageVisits;
-use Cms\Models\Pages\PageVisit;
+use PhynixMedia\Cms\Filament\Resources\PageVisits\Pages\ListPageVisits;
+use PhynixMedia\Cms\Models\Pages\PageVisit;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;

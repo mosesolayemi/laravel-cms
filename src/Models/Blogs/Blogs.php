@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Models\Blogs;
+namespace PhynixMedia\Cms\Models\Blogs;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
@@ -51,7 +51,7 @@ class Blogs extends Model
     }
 
     public function category(){
-        return $this->belongsTo('Cms\Models\Blogs\Category', 'category_id', 'id');
+        return $this->belongsTo('PhynixMedia\Cms\Models\Blogs\Category', 'category_id', 'id');
     }
 
     protected static function booted()

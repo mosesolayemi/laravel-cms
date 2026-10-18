@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Settings;
+namespace PhynixMedia\Cms\Settings;
 
-use Cms\Models\Settings\Setting;
+use PhynixMedia\Cms\Models\Settings\Setting;
 
 /**
  * Shared values, written into page content as `{phone}`, `{email}` and the

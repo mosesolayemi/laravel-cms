@@ -1,9 +1,9 @@
 <?php
 
-namespace Cms\Filament\Resources\Blocks\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\Blocks\Pages;
 
-use Cms\Filament\Resources\Blocks\BlockResource;
-use Cms\Filament\Resources\Pages\PageResource;
+use PhynixMedia\Cms\Filament\Resources\Blocks\BlockResource;
+use PhynixMedia\Cms\Filament\Resources\Pages\PageResource;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;

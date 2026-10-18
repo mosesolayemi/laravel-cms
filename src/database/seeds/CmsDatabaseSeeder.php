@@ -10,11 +10,11 @@ use Illuminate\Database\Seeder;
  * here rather than in the host application's seeders. The host calls this one
  * seeder and gets the whole CMS side set up:
  *
- *     $this->call(\Cms\Database\Seeders\CmsDatabaseSeeder::class);
+ *     $this->call(\PhynixMedia\Cms\Database\Seeders\CmsDatabaseSeeder::class);
  *
  * Or on its own:
  *
- *     php artisan db:seed --class='Cms\Database\Seeders\CmsDatabaseSeeder'
+ *     php artisan db:seed --class='PhynixMedia\Cms\Database\Seeders\CmsDatabaseSeeder'
  *
  * Order matters: a template row needs its layout row first, MenuSeeder
  * places pages in the menus, so the pages must already exist, and

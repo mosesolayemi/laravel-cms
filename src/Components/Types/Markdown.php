@@ -1,9 +1,9 @@
 <?php
 
-namespace Cms\Components\Types;
+namespace PhynixMedia\Cms\Components\Types;
 
-use Cms\Components\ComponentType;
-use Cms\Rendering\RenderContext;
+use PhynixMedia\Cms\Components\ComponentType;
+use PhynixMedia\Cms\Rendering\RenderContext;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Str;

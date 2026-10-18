@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Rendering;
+namespace PhynixMedia\Cms\Rendering;
 
-use Cms\Components\ComponentType;
-use Cms\Models\Pages\Layouts;
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Components\ComponentType;
+use PhynixMedia\Cms\Models\Pages\Layouts;
+use PhynixMedia\Cms\Models\Pages\Templates;
 
 /**
  * What a component is being rendered for: which page, inside which layout,

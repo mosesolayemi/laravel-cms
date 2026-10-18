@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Filament\Resources\Blogs\Schemas;
+namespace PhynixMedia\Cms\Filament\Resources\Blogs\Schemas;
 
-use Cms\Filament\Support\CmsFields;
-use Cms\Models\Blogs\Blogs;
-use Cms\Models\Blogs\Category;
+use PhynixMedia\Cms\Filament\Support\CmsFields;
+use PhynixMedia\Cms\Models\Blogs\Blogs;
+use PhynixMedia\Cms\Models\Blogs\Category;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;

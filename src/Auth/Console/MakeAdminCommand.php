@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Auth\Console;
+namespace PhynixMedia\Cms\Auth\Console;
 
-use Cms\Auth\Models\Admin;
+use PhynixMedia\Cms\Auth\Models\Admin;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 

@@ -1,16 +1,16 @@
 <?php
 
-namespace Cms\Filament\Resources\Pages\Schemas;
+namespace PhynixMedia\Cms\Filament\Resources\Pages\Schemas;
 
-use Cms\Cms;
-use Cms\Filament\Resources\Layouts\LayoutResource;
-use Cms\Filament\Support\CmsFields;
-use Cms\Filament\Support\ComponentBuilder;
-use Cms\Filament\Support\PublishedFile;
-use Cms\Models\Pages\Layouts;
-use Cms\Models\Pages\SeoKeyword;
-use Cms\Models\Pages\Templates;
-use Cms\Publishing\PagePublisher;
+use PhynixMedia\Cms\Cms;
+use PhynixMedia\Cms\Filament\Resources\Layouts\LayoutResource;
+use PhynixMedia\Cms\Filament\Support\CmsFields;
+use PhynixMedia\Cms\Filament\Support\ComponentBuilder;
+use PhynixMedia\Cms\Filament\Support\PublishedFile;
+use PhynixMedia\Cms\Models\Pages\Layouts;
+use PhynixMedia\Cms\Models\Pages\SeoKeyword;
+use PhynixMedia\Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Publishing\PagePublisher;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;

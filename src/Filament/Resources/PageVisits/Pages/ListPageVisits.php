@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Filament\Resources\PageVisits\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\PageVisits\Pages;
 
-use Cms\Filament\Resources\PageVisits\PageVisitResource;
+use PhynixMedia\Cms\Filament\Resources\PageVisits\PageVisitResource;
 use Filament\Resources\Pages\ListRecords;
 
 class ListPageVisits extends ListRecords

@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Console;
+namespace PhynixMedia\Cms\Console;
 
-use Cms\Publishing\Publisher;
+use PhynixMedia\Cms\Publishing\Publisher;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Filament\Resources\Layouts\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\Layouts\Pages;
 
-use Cms\Filament\Resources\Layouts\LayoutResource;
+use PhynixMedia\Cms\Filament\Resources\Layouts\LayoutResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

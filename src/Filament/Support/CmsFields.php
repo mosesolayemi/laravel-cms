@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Filament\Support;
+namespace PhynixMedia\Cms\Filament\Support;
 
 use Closure;
-use Cms\Models\Assets\Asset;
-use Cms\Support\Media;
+use PhynixMedia\Cms\Models\Assets\Asset;
+use PhynixMedia\Cms\Support\Media;
 use Filament\Actions\Action;
 use Filament\Forms\Components\BaseFileUpload;
 use Filament\Forms\Components\FileUpload;

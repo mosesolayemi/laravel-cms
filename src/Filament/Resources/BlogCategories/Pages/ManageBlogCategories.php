@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Filament\Resources\BlogCategories\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\BlogCategories\Pages;
 
-use Cms\Filament\Resources\BlogCategories\BlogCategoryResource;
+use PhynixMedia\Cms\Filament\Resources\BlogCategories\BlogCategoryResource;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManageBlogCategories extends ManageRecords

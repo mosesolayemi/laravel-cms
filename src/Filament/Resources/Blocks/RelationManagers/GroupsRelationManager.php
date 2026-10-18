@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Filament\Resources\Blocks\RelationManagers;
+namespace PhynixMedia\Cms\Filament\Resources\Blocks\RelationManagers;
 
-use Cms\Filament\Support\CmsFields;
+use PhynixMedia\Cms\Filament\Support\CmsFields;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;

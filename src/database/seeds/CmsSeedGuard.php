@@ -1,6 +1,6 @@
 <?php
 
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Models\Pages\Templates;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 

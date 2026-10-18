@@ -1,14 +1,14 @@
 <?php
 
-namespace Cms\Filament\Resources\Components;
+namespace PhynixMedia\Cms\Filament\Resources\Components;
 
 use BackedEnum;
-use Cms\Filament\Resources\Components\Pages\CreateComponent;
-use Cms\Filament\Resources\Components\Pages\EditComponent;
-use Cms\Filament\Resources\Components\Pages\ListComponents;
-use Cms\Filament\Resources\Components\Schemas\ComponentForm;
-use Cms\Filament\Resources\Components\Tables\ComponentsTable;
-use Cms\Models\Components\Component;
+use PhynixMedia\Cms\Filament\Resources\Components\Pages\CreateComponent;
+use PhynixMedia\Cms\Filament\Resources\Components\Pages\EditComponent;
+use PhynixMedia\Cms\Filament\Resources\Components\Pages\ListComponents;
+use PhynixMedia\Cms\Filament\Resources\Components\Schemas\ComponentForm;
+use PhynixMedia\Cms\Filament\Resources\Components\Tables\ComponentsTable;
+use PhynixMedia\Cms\Models\Components\Component;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;

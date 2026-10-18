@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Components;
+namespace PhynixMedia\Cms\Components;
 
-use Cms\Rendering\RenderContext;
+use PhynixMedia\Cms\Rendering\RenderContext;
 
 /**
  * A kind of component an editor can place on a page or layout.

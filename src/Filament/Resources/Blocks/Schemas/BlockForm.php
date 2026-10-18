@@ -1,9 +1,9 @@
 <?php
 
-namespace Cms\Filament\Resources\Blocks\Schemas;
+namespace PhynixMedia\Cms\Filament\Resources\Blocks\Schemas;
 
-use Cms\Filament\Support\CmsFields;
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Filament\Support\CmsFields;
+use PhynixMedia\Cms\Models\Pages\Templates;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;

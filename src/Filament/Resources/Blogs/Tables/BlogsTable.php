@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Filament\Resources\Blogs\Tables;
+namespace PhynixMedia\Cms\Filament\Resources\Blogs\Tables;
 
-use Cms\Models\Blogs\Category;
+use PhynixMedia\Cms\Models\Blogs\Category;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;

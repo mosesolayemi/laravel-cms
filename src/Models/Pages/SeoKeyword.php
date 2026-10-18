@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Models\Pages;
+namespace PhynixMedia\Cms\Models\Pages;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
@@ -31,7 +31,7 @@ class SeoKeyword extends Model
     }
 
     public function templates(){
-        return $this->belongsTo('Cms\Models\Pages\Templates', 'id', 'seo_keyword_id');
+        return $this->belongsTo('PhynixMedia\Cms\Models\Pages\Templates', 'id', 'seo_keyword_id');
     }
 
 }

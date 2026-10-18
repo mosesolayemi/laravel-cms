@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Filament\Resources\Pages\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\Pages\Pages;
 
-use Cms\Filament\Resources\Pages\PageResource;
+use PhynixMedia\Cms\Filament\Resources\Pages\PageResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

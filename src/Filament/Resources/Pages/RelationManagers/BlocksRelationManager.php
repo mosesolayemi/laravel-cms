@@ -1,9 +1,9 @@
 <?php
 
-namespace Cms\Filament\Resources\Pages\RelationManagers;
+namespace PhynixMedia\Cms\Filament\Resources\Pages\RelationManagers;
 
-use Cms\Filament\Resources\Blocks\BlockResource;
-use Cms\Filament\Support\CmsFields;
+use PhynixMedia\Cms\Filament\Resources\Blocks\BlockResource;
+use PhynixMedia\Cms\Filament\Support\CmsFields;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;

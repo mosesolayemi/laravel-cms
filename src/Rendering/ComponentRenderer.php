@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Rendering;
+namespace PhynixMedia\Cms\Rendering;
 
-use Cms\Components\ComponentRegistry;
-use Cms\Models\Components\Component;
-use Cms\Settings\Tokens;
+use PhynixMedia\Cms\Components\ComponentRegistry;
+use PhynixMedia\Cms\Models\Components\Component;
+use PhynixMedia\Cms\Settings\Tokens;
 use Illuminate\Support\HtmlString;
 use Throwable;
 

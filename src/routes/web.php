@@ -1,6 +1,6 @@
 <?php
 
-use Cms\Http\Controllers\PreviewController;
+use PhynixMedia\Cms\Http\Controllers\PreviewController;
 use Illuminate\Support\Facades\Route;
 
 /*

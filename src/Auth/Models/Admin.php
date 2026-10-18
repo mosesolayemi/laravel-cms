@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Auth\Models;
+namespace PhynixMedia\Cms\Auth\Models;
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;

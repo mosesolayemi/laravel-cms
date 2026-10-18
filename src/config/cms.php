@@ -15,7 +15,7 @@ return [
 
     'auth' => [
         'guard' => 'admin',
-        'model' => Cms\Auth\Models\Admin::class,
+        'model' => PhynixMedia\Cms\Auth\Models\Admin::class,
     ],
 
     /*
@@ -330,7 +330,7 @@ return [
     */
 
     'content' => [
-        Cms\Content\CoreContent::class,
+        PhynixMedia\Cms\Content\CoreContent::class,
     ],
 
 ];

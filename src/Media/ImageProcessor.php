@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Media;
+namespace PhynixMedia\Cms\Media;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;

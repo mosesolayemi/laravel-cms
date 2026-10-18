@@ -1,12 +1,12 @@
 <?php
 
-namespace Cms\Filament\Support;
+namespace PhynixMedia\Cms\Filament\Support;
 
-use Cms\Components\ComponentRegistry;
-use Cms\Components\ComponentType;
-use Cms\Filament\Resources\Components\ComponentResource;
-use Cms\Filament\Support\CmsFields;
-use Cms\Models\Components\Component;
+use PhynixMedia\Cms\Components\ComponentRegistry;
+use PhynixMedia\Cms\Components\ComponentType;
+use PhynixMedia\Cms\Filament\Resources\Components\ComponentResource;
+use PhynixMedia\Cms\Filament\Support\CmsFields;
+use PhynixMedia\Cms\Models\Components\Component;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;

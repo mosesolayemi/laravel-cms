@@ -1,9 +1,9 @@
 <?php
 
-namespace Cms\Publishing;
+namespace PhynixMedia\Cms\Publishing;
 
-use Cms\Components\ComponentRegistry;
-use Cms\Rendering\RenderContext;
+use PhynixMedia\Cms\Components\ComponentRegistry;
+use PhynixMedia\Cms\Rendering\RenderContext;
 use Illuminate\Support\Str;
 
 /**
@@ -69,7 +69,7 @@ class Sections
             'endCmsSection' => fn (): string => '<?php foreach (array_diff(array_keys(get_defined_vars()), $__cmsBefore) as $__cmsVar) { unset($$__cmsVar); } '
                 . 'unset($__cmsVar); ?>',
 
-            'cmsBlock' => fn (string $expression): string => '<?php echo app(\\' . \Cms\Rendering\ComponentRenderer::class
+            'cmsBlock' => fn (string $expression): string => '<?php echo app(\\' . \PhynixMedia\Cms\Rendering\ComponentRenderer::class
                 . "::class)->renderType({$expression}, \$cms ?? new \\" . RenderContext::class . '); ?>',
         ];
     }

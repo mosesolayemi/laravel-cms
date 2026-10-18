@@ -1,7 +1,7 @@
 {{--
     A builder page: the layout's regions around the page's own content,
     rendered inside the layout's shell. $regions arrive already rendered —
-    see Cms\Rendering\PageRenderer for why.
+    see PhynixMedia\Cms\Rendering\PageRenderer for why.
 
     The shell is any view that yields `cms_header`, `content` and `cms_footer`
     (and optionally `title`, `meta_description`, and the `cms_head` and

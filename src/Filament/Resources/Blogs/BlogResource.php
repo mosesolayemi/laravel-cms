@@ -1,14 +1,14 @@
 <?php
 
-namespace Cms\Filament\Resources\Blogs;
+namespace PhynixMedia\Cms\Filament\Resources\Blogs;
 
 use BackedEnum;
-use Cms\Filament\Resources\Blogs\Pages\CreateBlog;
-use Cms\Filament\Resources\Blogs\Pages\EditBlog;
-use Cms\Filament\Resources\Blogs\Pages\ListBlogs;
-use Cms\Filament\Resources\Blogs\Schemas\BlogForm;
-use Cms\Filament\Resources\Blogs\Tables\BlogsTable;
-use Cms\Models\Blogs\Blogs;
+use PhynixMedia\Cms\Filament\Resources\Blogs\Pages\CreateBlog;
+use PhynixMedia\Cms\Filament\Resources\Blogs\Pages\EditBlog;
+use PhynixMedia\Cms\Filament\Resources\Blogs\Pages\ListBlogs;
+use PhynixMedia\Cms\Filament\Resources\Blogs\Schemas\BlogForm;
+use PhynixMedia\Cms\Filament\Resources\Blogs\Tables\BlogsTable;
+use PhynixMedia\Cms\Models\Blogs\Blogs;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;

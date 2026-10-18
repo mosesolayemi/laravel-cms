@@ -1,12 +1,12 @@
 <?php
 
-namespace Cms\Filament\Resources\Components\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\Components\Pages;
 
-use Cms\Filament\Actions\PreviewAction;
-use Cms\Filament\Resources\Components\ComponentResource;
-use Cms\Filament\Support\PublishedFile;
-use Cms\Publishing\ComponentPublisher;
-use Cms\Preview\PreviewStore;
+use PhynixMedia\Cms\Filament\Actions\PreviewAction;
+use PhynixMedia\Cms\Filament\Resources\Components\ComponentResource;
+use PhynixMedia\Cms\Filament\Support\PublishedFile;
+use PhynixMedia\Cms\Publishing\ComponentPublisher;
+use PhynixMedia\Cms\Preview\PreviewStore;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 

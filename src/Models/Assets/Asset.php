@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Models\Assets;
+namespace PhynixMedia\Cms\Models\Assets;
 
-use Cms\Models\Components\Component;
-use Cms\Models\Pages\Layouts;
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Models\Components\Component;
+use PhynixMedia\Cms\Models\Pages\Layouts;
+use PhynixMedia\Cms\Models\Pages\Templates;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Publishing;
+namespace PhynixMedia\Cms\Publishing;
 
-use Cms\Models\Components\Component;
+use PhynixMedia\Cms\Models\Components\Component;
 use Illuminate\Database\Eloquent\Model;
 use RuntimeException;
 

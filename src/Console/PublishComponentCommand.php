@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Console;
+namespace PhynixMedia\Cms\Console;
 
-use Cms\Models\Components\Component;
-use Cms\Publishing\ComponentPublisher;
-use Cms\Publishing\Publisher;
+use PhynixMedia\Cms\Models\Components\Component;
+use PhynixMedia\Cms\Publishing\ComponentPublisher;
+use PhynixMedia\Cms\Publishing\Publisher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 

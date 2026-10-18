@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Settings;
+namespace PhynixMedia\Cms\Settings;
 
-use Cms\Filament\Resources\Components\ComponentResource;
-use Cms\Filament\Support\CmsFields;
-use Cms\Models\Components\Component;
+use PhynixMedia\Cms\Filament\Resources\Components\ComponentResource;
+use PhynixMedia\Cms\Filament\Support\CmsFields;
+use PhynixMedia\Cms\Models\Components\Component;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Cms\Filament\Resources\Assets\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\Assets\Pages;
 
-use Cms\Filament\Resources\Assets\AssetResource;
-use Cms\Models\Assets\Asset;
+use PhynixMedia\Cms\Filament\Resources\Assets\AssetResource;
+use PhynixMedia\Cms\Models\Assets\Asset;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;

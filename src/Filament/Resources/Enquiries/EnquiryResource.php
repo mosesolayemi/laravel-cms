@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Filament\Resources\Enquiries;
+namespace PhynixMedia\Cms\Filament\Resources\Enquiries;
 
 use BackedEnum;
-use Cms\Filament\Resources\Enquiries\Pages\ListEnquiries;
-use Cms\Models\Pages\WebEnquiry;
+use PhynixMedia\Cms\Filament\Resources\Enquiries\Pages\ListEnquiries;
+use PhynixMedia\Cms\Models\Pages\WebEnquiry;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;

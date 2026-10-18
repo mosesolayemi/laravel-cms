@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Filament\Resources\Pages\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\Pages\Pages;
 
-use Cms\Filament\Actions\PreviewAction;
-use Cms\Filament\Resources\Pages\PageResource;
-use Cms\Preview\PreviewStore;
+use PhynixMedia\Cms\Filament\Actions\PreviewAction;
+use PhynixMedia\Cms\Filament\Resources\Pages\PageResource;
+use PhynixMedia\Cms\Preview\PreviewStore;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePage extends CreateRecord

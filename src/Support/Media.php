@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Support;
+namespace PhynixMedia\Cms\Support;
 
-use Cms\Models\Assets\Asset;
+use PhynixMedia\Cms\Models\Assets\Asset;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;

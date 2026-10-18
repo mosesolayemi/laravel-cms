@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Filament\Resources\Admins\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\Admins\Pages;
 
-use Cms\Filament\Resources\Admins\AdminResource;
+use PhynixMedia\Cms\Filament\Resources\Admins\AdminResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateAdmin extends CreateRecord

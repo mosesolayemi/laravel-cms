@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Filament\Resources\Blocks\Tables;
+namespace PhynixMedia\Cms\Filament\Resources\Blocks\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;

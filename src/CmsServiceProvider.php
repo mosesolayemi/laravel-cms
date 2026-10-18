@@ -1,18 +1,18 @@
 <?php
 
-namespace Cms;
+namespace PhynixMedia\Cms;
 
-use Cms\Auth\Console\MakeAdminCommand;
-use Cms\Components\ComponentRegistry;
-use Cms\Components\Types;
-use Cms\Console\ImportAssetsCommand;
-use Cms\Console\PublishComponentCommand;
-use Cms\Console\PublishPageCommand;
-use Cms\Console\SeedComponentsCommand;
-use Cms\Publishing\Sections;
-use Cms\Providers\CmsPanelProvider;
-use Cms\Rendering\ComponentRenderer;
-use Cms\Rendering\PageRenderer;
+use PhynixMedia\Cms\Auth\Console\MakeAdminCommand;
+use PhynixMedia\Cms\Components\ComponentRegistry;
+use PhynixMedia\Cms\Components\Types;
+use PhynixMedia\Cms\Console\ImportAssetsCommand;
+use PhynixMedia\Cms\Console\PublishComponentCommand;
+use PhynixMedia\Cms\Console\PublishPageCommand;
+use PhynixMedia\Cms\Console\SeedComponentsCommand;
+use PhynixMedia\Cms\Publishing\Sections;
+use PhynixMedia\Cms\Providers\CmsPanelProvider;
+use PhynixMedia\Cms\Rendering\ComponentRenderer;
+use PhynixMedia\Cms\Rendering\PageRenderer;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -95,7 +95,7 @@ class CmsServiceProvider extends ServiceProvider
         // Place a library component in any Blade view: @cmsComponent('site-cta').
         // Inside a CMS page the component knows which page it is on.
         Blade::directive('cmsComponent', fn (string $expression): string => "<?php echo cms_component({$expression}, "
-            . '(($page ?? null) instanceof \\YourVendor\\Cms\\Models\\Pages\\Templates ? $page : null)); ?>');
+            . '(($page ?? null) instanceof \\PhynixMedia\\Cms\\Models\\Pages\\Templates ? $page : null)); ?>');
 
         // Used by pages published with cms:publish-page.
         foreach (Sections::directives() as $name => $compiler) {

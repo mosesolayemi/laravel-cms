@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Preview;
+namespace PhynixMedia\Cms\Preview;
 
-use Cms\Support\Media;
+use PhynixMedia\Cms\Support\Media;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 

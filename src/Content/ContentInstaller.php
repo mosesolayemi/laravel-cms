@@ -1,12 +1,12 @@
 <?php
 
-namespace Cms\Content;
+namespace PhynixMedia\Cms\Content;
 
 use Closure;
-use Cms\Components\ComponentRegistry;
-use Cms\Models\Components\Component;
-use Cms\Models\Pages\Layouts;
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Components\ComponentRegistry;
+use PhynixMedia\Cms\Models\Components\Component;
+use PhynixMedia\Cms\Models\Pages\Layouts;
+use PhynixMedia\Cms\Models\Pages\Templates;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use InvalidArgumentException;

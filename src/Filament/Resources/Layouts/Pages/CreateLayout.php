@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Filament\Resources\Layouts\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\Layouts\Pages;
 
-use Cms\Filament\Actions\PreviewAction;
-use Cms\Filament\Resources\Layouts\LayoutResource;
-use Cms\Preview\PreviewStore;
+use PhynixMedia\Cms\Filament\Actions\PreviewAction;
+use PhynixMedia\Cms\Filament\Resources\Layouts\LayoutResource;
+use PhynixMedia\Cms\Preview\PreviewStore;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateLayout extends CreateRecord

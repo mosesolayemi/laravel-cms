@@ -16,8 +16,8 @@
 |
 */
 
-use Cms\Facades\Cms;
-use Cms\Support\Media;
+use PhynixMedia\Cms\Facades\Cms;
+use PhynixMedia\Cms\Support\Media;
 use Illuminate\Support\Facades\Log;
 
 if (! function_exists('setting')) {
@@ -43,7 +43,7 @@ if (! function_exists('site_text')) {
      */
     function site_text($text)
     {
-        return \Cms\Settings\Tokens::apply($text);
+        return \PhynixMedia\Cms\Settings\Tokens::apply($text);
     }
 }
 

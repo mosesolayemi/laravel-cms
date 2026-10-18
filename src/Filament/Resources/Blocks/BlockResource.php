@@ -1,14 +1,14 @@
 <?php
 
-namespace Cms\Filament\Resources\Blocks;
+namespace PhynixMedia\Cms\Filament\Resources\Blocks;
 
 use BackedEnum;
-use Cms\Filament\Resources\Blocks\Pages\EditBlock;
-use Cms\Filament\Resources\Blocks\Pages\ListBlocks;
-use Cms\Filament\Resources\Blocks\RelationManagers\GroupsRelationManager;
-use Cms\Filament\Resources\Blocks\Schemas\BlockForm;
-use Cms\Filament\Resources\Blocks\Tables\BlocksTable;
-use Cms\Models\Pages\Blocks;
+use PhynixMedia\Cms\Filament\Resources\Blocks\Pages\EditBlock;
+use PhynixMedia\Cms\Filament\Resources\Blocks\Pages\ListBlocks;
+use PhynixMedia\Cms\Filament\Resources\Blocks\RelationManagers\GroupsRelationManager;
+use PhynixMedia\Cms\Filament\Resources\Blocks\Schemas\BlockForm;
+use PhynixMedia\Cms\Filament\Resources\Blocks\Tables\BlocksTable;
+use PhynixMedia\Cms\Models\Pages\Blocks;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;

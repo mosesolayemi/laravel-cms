@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Models\Pages\Relations;
+namespace PhynixMedia\Cms\Models\Pages\Relations;
 
 class BlogRelations
 {

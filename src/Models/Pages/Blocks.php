@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Models\Pages;
+namespace PhynixMedia\Cms\Models\Pages;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
@@ -23,11 +23,11 @@ class Blocks extends Model
     ];
 
     public function templates(){
-        return $this->belongsTo('Cms\Models\Pages\Templates', 'id', 'template_id');
+        return $this->belongsTo('PhynixMedia\Cms\Models\Pages\Templates', 'id', 'template_id');
     }
 
     public function groups(){
-        return $this->hasMany('Cms\Models\Pages\Groups', 'block_id', 'id');
+        return $this->hasMany('PhynixMedia\Cms\Models\Pages\Groups', 'block_id', 'id');
     }
 
     protected static function booted()

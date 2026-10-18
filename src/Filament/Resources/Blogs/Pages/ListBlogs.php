@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Filament\Resources\Blogs\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\Blogs\Pages;
 
-use Cms\Filament\Resources\Blogs\BlogResource;
+use PhynixMedia\Cms\Filament\Resources\Blogs\BlogResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Filament\Widgets;
+namespace PhynixMedia\Cms\Filament\Widgets;
 
-use Cms\Models\Pages\PageVisit;
+use PhynixMedia\Cms\Models\Pages\PageVisit;
 use Carbon\CarbonImmutable;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Collection;

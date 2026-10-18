@@ -1,17 +1,17 @@
 <?php
 
-namespace Cms;
+namespace PhynixMedia\Cms;
 
-use Cms\Models\Blogs\Blogs;
-use Cms\Models\Blogs\Category;
-use Cms\Models\Components\Component;
-use Cms\Models\Pages\PageVisit;
-use Cms\Models\Pages\Templates;
-use Cms\Models\Settings\Setting;
-use Cms\Rendering\ComponentRenderer;
-use Cms\Rendering\PageRenderer;
-use Cms\Rendering\RenderContext;
-use Cms\Settings\SettingsSchema;
+use PhynixMedia\Cms\Models\Blogs\Blogs;
+use PhynixMedia\Cms\Models\Blogs\Category;
+use PhynixMedia\Cms\Models\Components\Component;
+use PhynixMedia\Cms\Models\Pages\PageVisit;
+use PhynixMedia\Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Models\Settings\Setting;
+use PhynixMedia\Cms\Rendering\ComponentRenderer;
+use PhynixMedia\Cms\Rendering\PageRenderer;
+use PhynixMedia\Cms\Rendering\RenderContext;
+use PhynixMedia\Cms\Settings\SettingsSchema;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\HtmlString;

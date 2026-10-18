@@ -1,9 +1,9 @@
 <?php
 
-namespace Cms\Filament\Resources\Components\Tables;
+namespace PhynixMedia\Cms\Filament\Resources\Components\Tables;
 
-use Cms\Components\ComponentRegistry;
-use Cms\Models\Components\Component;
+use PhynixMedia\Cms\Components\ComponentRegistry;
+use PhynixMedia\Cms\Models\Components\Component;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;

@@ -1,11 +1,11 @@
 <?php
 
-namespace Cms\Filament\Resources\Layouts\Schemas;
+namespace PhynixMedia\Cms\Filament\Resources\Layouts\Schemas;
 
-use Cms\Components\ComponentType;
-use Cms\Filament\Support\CmsFields;
-use Cms\Filament\Support\ComponentBuilder;
-use Cms\Models\Pages\Layouts;
+use PhynixMedia\Cms\Components\ComponentType;
+use PhynixMedia\Cms\Filament\Support\CmsFields;
+use PhynixMedia\Cms\Filament\Support\ComponentBuilder;
+use PhynixMedia\Cms\Models\Pages\Layouts;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;

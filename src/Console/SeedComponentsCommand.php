@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Console;
+namespace PhynixMedia\Cms\Console;
 
-use Cms\Content\ContentInstaller;
+use PhynixMedia\Cms\Content\ContentInstaller;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Console\Helper\ProgressBar;

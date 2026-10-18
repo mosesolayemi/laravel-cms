@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Filament\Support;
+namespace PhynixMedia\Cms\Filament\Support;
 
-use Cms\Publishing\Publisher;
+use PhynixMedia\Cms\Publishing\Publisher;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Callout;

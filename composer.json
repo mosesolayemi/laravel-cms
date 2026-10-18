@@ -10,7 +10,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Cms\\": "src/"
+            "PhynixMedia\\Cms\\": "src/"
         },
         "classmap": [
             "src/database/seeds"
@@ -22,10 +22,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Cms\\CmsServiceProvider"
+                "PhynixMedia\\Cms\\CmsServiceProvider"
             ],
             "aliases": {
-                "Cms": "Cms\\Facades\\Cms"
+                "Cms": "PhynixMedia\\Cms\\Facades\\Cms"
             }
         }
     },

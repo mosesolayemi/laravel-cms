@@ -1,9 +1,9 @@
 <?php
 
-namespace Cms\Rendering;
+namespace PhynixMedia\Cms\Rendering;
 
-use Cms\Models\Pages\Layouts;
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Models\Pages\Layouts;
+use PhynixMedia\Cms\Models\Pages\Templates;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\HtmlString;
 

@@ -1,15 +1,15 @@
 <?php
 
-namespace Cms\Filament\Resources\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\Pages;
 
 use BackedEnum;
-use Cms\Filament\Resources\Pages\Pages\CreatePage;
-use Cms\Filament\Resources\Pages\Pages\EditPage;
-use Cms\Filament\Resources\Pages\Pages\ListPages;
-use Cms\Filament\Resources\Pages\RelationManagers\BlocksRelationManager;
-use Cms\Filament\Resources\Pages\Schemas\PageForm;
-use Cms\Filament\Resources\Pages\Tables\PagesTable;
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Filament\Resources\Pages\Pages\CreatePage;
+use PhynixMedia\Cms\Filament\Resources\Pages\Pages\EditPage;
+use PhynixMedia\Cms\Filament\Resources\Pages\Pages\ListPages;
+use PhynixMedia\Cms\Filament\Resources\Pages\RelationManagers\BlocksRelationManager;
+use PhynixMedia\Cms\Filament\Resources\Pages\Schemas\PageForm;
+use PhynixMedia\Cms\Filament\Resources\Pages\Tables\PagesTable;
+use PhynixMedia\Cms\Models\Pages\Templates;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;

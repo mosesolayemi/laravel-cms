@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Publishing;
+namespace PhynixMedia\Cms\Publishing;
 
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Models\Pages\Templates;
 use Illuminate\Database\Eloquent\Model;
 
 /**

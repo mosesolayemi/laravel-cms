@@ -1,11 +1,11 @@
 <?php
 
-namespace Cms\Filament\Resources\SeoKeywords;
+namespace PhynixMedia\Cms\Filament\Resources\SeoKeywords;
 
 use BackedEnum;
-use Cms\Filament\Resources\SeoKeywords\Pages\ManageSeoKeywords;
-use Cms\Filament\Support\CmsFields;
-use Cms\Models\Pages\SeoKeyword;
+use PhynixMedia\Cms\Filament\Resources\SeoKeywords\Pages\ManageSeoKeywords;
+use PhynixMedia\Cms\Filament\Support\CmsFields;
+use PhynixMedia\Cms\Models\Pages\SeoKeyword;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;

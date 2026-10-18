@@ -1,6 +1,6 @@
 <?php
 
-use Cms\Content\ContentInstaller;
+use PhynixMedia\Cms\Content\ContentInstaller;
 use Illuminate\Database\Seeder;
 
 /**

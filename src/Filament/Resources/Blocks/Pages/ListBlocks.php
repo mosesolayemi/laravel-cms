@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Filament\Resources\Blocks\Pages;
+namespace PhynixMedia\Cms\Filament\Resources\Blocks\Pages;
 
-use Cms\Filament\Resources\Blocks\BlockResource;
+use PhynixMedia\Cms\Filament\Resources\Blocks\BlockResource;
 use Filament\Resources\Pages\ListRecords;
 
 class ListBlocks extends ListRecords

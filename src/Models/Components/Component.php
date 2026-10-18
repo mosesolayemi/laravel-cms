@@ -1,11 +1,11 @@
 <?php
 
-namespace Cms\Models\Components;
+namespace PhynixMedia\Cms\Models\Components;
 
-use Cms\Components\ComponentRegistry;
-use Cms\Components\ComponentType;
-use Cms\Models\Pages\Layouts;
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Components\ComponentRegistry;
+use PhynixMedia\Cms\Components\ComponentType;
+use PhynixMedia\Cms\Models\Pages\Layouts;
+use PhynixMedia\Cms\Models\Pages\Templates;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;

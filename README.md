@@ -57,13 +57,13 @@ src/
 1. Autoload it — in the host's `composer.json`:
 
    ```json
-   "autoload": { "psr-4": { "Cms\\": "packages/cms/src" } }
+   "autoload": { "psr-4": { "PhynixMedia\\Cms\\": "packages/cms/src" } }
    ```
 
 2. Register the provider in `config/app.php`:
 
    ```php
-   Cms\CmsServiceProvider::class,
+   PhynixMedia\Cms\CmsServiceProvider::class,
    ```
 
 3. `php artisan migrate` then `php artisan auth:admin`.
@@ -94,7 +94,7 @@ drop its siblings.
 
 ## Image processing
 
-`Cms\Media\ImageProcessor` crops and re-encodes uploads to named presets, so a
+`PhynixMedia\Cms\Media\ImageProcessor` crops and re-encodes uploads to named presets, so a
 page only ever receives images of the shape it was designed for. Presets are
 defined in `config/cms.php`:
 
@@ -213,7 +213,7 @@ php artisan auth:admin
 The site never touches the CMS models directly — it goes through the read API:
 
 ```php
-use Cms\Facades\Cms;
+use PhynixMedia\Cms\Facades\Cms;
 
 Cms::page('about-us');       // a page with its groups and layout
 Cms::menu();                 // header menu tree
@@ -358,7 +358,7 @@ A component type is a class: the fields an editor fills in, and a Blade view
 those values render through.
 
 ```php
-use Cms\Components\ComponentType;
+use PhynixMedia\Cms\Components\ComponentType;
 use Filament\Forms\Components\TextInput;
 
 class Testimonial extends ComponentType
@@ -426,7 +426,7 @@ Components are rendered from inside `cms::page`, so a component view can
 ```php
 // in the host's page controller
 $page = Cms::page($url);
-abort_if(! $page || $page->status != Cms\Cms::PUBLISHED, 404);
+abort_if(! $page || $page->status != PhynixMedia\Cms\Cms::PUBLISHED, 404);
 
 return Cms::render($page);
 ```
@@ -503,7 +503,7 @@ has "Save to library". Library components carry a free-text `group`.
 
 ### Asset library
 
-`Cms\Models\Assets\Asset` indexes every file on the media disk the CMS
+`PhynixMedia\Cms\Models\Assets\Asset` indexes every file on the media disk the CMS
 uses. Image fields built with `CmsFields::image()` register their uploads
 and offer "Choose from assets". The Assets screen uploads, groups and
 deletes; deletion is refused while content uses the file, and files in
@@ -540,9 +540,9 @@ in `cms.content`: library components, layouts and page content, each keyed
 by a stable handle (the URL, for pages).
 
 ```php
-use Cms\Content\Blocks;
-use Cms\Content\ContentDefinition;
-use Cms\Support\Media;
+use PhynixMedia\Cms\Content\Blocks;
+use PhynixMedia\Cms\Content\ContentDefinition;
+use PhynixMedia\Cms\Support\Media;
 
 class SiteContent implements ContentDefinition
 {

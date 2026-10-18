@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Filament\Resources\BlogCategories;
+namespace PhynixMedia\Cms\Filament\Resources\BlogCategories;
 
 use BackedEnum;
-use Cms\Filament\Resources\BlogCategories\Pages\ManageBlogCategories;
-use Cms\Models\Blogs\Category;
+use PhynixMedia\Cms\Filament\Resources\BlogCategories\Pages\ManageBlogCategories;
+use PhynixMedia\Cms\Models\Blogs\Category;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;

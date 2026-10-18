@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Models\Blogs;
+namespace PhynixMedia\Cms\Models\Blogs;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +26,6 @@ class Category extends Model
     }
 
     public function blogs(){
-        return $this->hasMany('Cms\Models\Blogs\Blogs', 'category_id', 'id');
+        return $this->hasMany('PhynixMedia\Cms\Models\Blogs\Blogs', 'category_id', 'id');
     }
 }

@@ -1,16 +1,16 @@
 <?php
 
-namespace Cms\Facades;
+namespace PhynixMedia\Cms\Facades;
 
-use Cms\Models\Blogs\Blogs;
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Models\Blogs\Blogs;
+use PhynixMedia\Cms\Models\Pages\Templates;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static Templates|null page(?string $url)
  * @method static \Illuminate\Contracts\View\View render(Templates $page)
- * @method static \Illuminate\Support\HtmlString component(\Cms\Models\Components\Component|int|string $reference, ?Templates $page = null)
+ * @method static \Illuminate\Support\HtmlString component(\PhynixMedia\Cms\Models\Components\Component|int|string $reference, ?Templates $page = null)
  * @method static array menu()
  * @method static array footerMenu()
  * @method static array footerColumns()
@@ -22,12 +22,12 @@ use Illuminate\Support\Facades\Facade;
  * @method static Collection categories()
  * @method static void recordVisit(?string $url)
  *
- * @see \Cms\Cms
+ * @see \PhynixMedia\Cms\Cms
  */
 class Cms extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Cms\Cms::class;
+        return \PhynixMedia\Cms\Cms::class;
     }
 }

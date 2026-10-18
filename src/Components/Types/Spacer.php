@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Components\Types;
+namespace PhynixMedia\Cms\Components\Types;
 
-use Cms\Components\ComponentType;
+use PhynixMedia\Cms\Components\ComponentType;
 use Filament\Forms\Components\Select;
 
 /**

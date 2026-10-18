@@ -1,14 +1,14 @@
 <?php
 
-namespace Cms\Http\Controllers;
+namespace PhynixMedia\Cms\Http\Controllers;
 
-use Cms\Components\ComponentRegistry;
-use Cms\Components\ComponentType;
-use Cms\Models\Components\Component;
-use Cms\Models\Pages\Layouts;
-use Cms\Models\Pages\Templates;
-use Cms\Preview\PreviewStore;
-use Cms\Rendering\PageRenderer;
+use PhynixMedia\Cms\Components\ComponentRegistry;
+use PhynixMedia\Cms\Components\ComponentType;
+use PhynixMedia\Cms\Models\Components\Component;
+use PhynixMedia\Cms\Models\Pages\Layouts;
+use PhynixMedia\Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Preview\PreviewStore;
+use PhynixMedia\Cms\Rendering\PageRenderer;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Cms\Filament\Resources\Pages\Tables;
+namespace PhynixMedia\Cms\Filament\Resources\Pages\Tables;
 
-use Cms\Cms;
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Cms;
+use PhynixMedia\Cms\Models\Pages\Templates;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;

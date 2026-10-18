@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Components\Types;
+namespace PhynixMedia\Cms\Components\Types;
 
 /**
  * The content widths the generic components offer.

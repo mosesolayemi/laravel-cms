@@ -1,10 +1,10 @@
 <?php
 
-namespace Cms\Filament\Pages;
+namespace PhynixMedia\Cms\Filament\Pages;
 
 use BackedEnum;
-use Cms\Facades\Cms;
-use Cms\Settings\SettingsSchema;
+use PhynixMedia\Cms\Facades\Cms;
+use PhynixMedia\Cms\Settings\SettingsSchema;
 use Filament\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;

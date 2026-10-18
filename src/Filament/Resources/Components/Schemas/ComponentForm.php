@@ -1,15 +1,15 @@
 <?php
 
-namespace Cms\Filament\Resources\Components\Schemas;
+namespace PhynixMedia\Cms\Filament\Resources\Components\Schemas;
 
-use Cms\Components\ComponentRegistry;
-use Cms\Filament\Resources\Layouts\LayoutResource;
-use Cms\Filament\Resources\Pages\PageResource;
-use Cms\Filament\Support\CmsFields;
-use Cms\Filament\Support\PublishedFile;
-use Cms\Publishing\ComponentPublisher;
-use Cms\Models\Components\Component;
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Components\ComponentRegistry;
+use PhynixMedia\Cms\Filament\Resources\Layouts\LayoutResource;
+use PhynixMedia\Cms\Filament\Resources\Pages\PageResource;
+use PhynixMedia\Cms\Filament\Support\CmsFields;
+use PhynixMedia\Cms\Filament\Support\PublishedFile;
+use PhynixMedia\Cms\Publishing\ComponentPublisher;
+use PhynixMedia\Cms\Models\Components\Component;
+use PhynixMedia\Cms\Models\Pages\Templates;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;

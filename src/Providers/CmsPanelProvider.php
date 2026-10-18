@@ -1,21 +1,21 @@
 <?php
 
-namespace Cms\Providers;
+namespace PhynixMedia\Cms\Providers;
 
-use Cms\Filament\Pages\SiteSettings;
-use Cms\Filament\Resources\Admins\AdminResource;
-use Cms\Filament\Resources\Assets\AssetResource;
-use Cms\Filament\Resources\BlogCategories\BlogCategoryResource;
-use Cms\Filament\Resources\Blocks\BlockResource;
-use Cms\Filament\Resources\Blogs\BlogResource;
-use Cms\Filament\Resources\Components\ComponentResource;
-use Cms\Filament\Resources\Enquiries\EnquiryResource;
-use Cms\Filament\Resources\Layouts\LayoutResource;
-use Cms\Filament\Resources\PageVisits\PageVisitResource;
-use Cms\Filament\Resources\Pages\PageResource;
-use Cms\Filament\Resources\SeoKeywords\SeoKeywordResource;
-use Cms\Filament\Widgets\CmsOverview;
-use Cms\Filament\Widgets\VisitsChart;
+use PhynixMedia\Cms\Filament\Pages\SiteSettings;
+use PhynixMedia\Cms\Filament\Resources\Admins\AdminResource;
+use PhynixMedia\Cms\Filament\Resources\Assets\AssetResource;
+use PhynixMedia\Cms\Filament\Resources\BlogCategories\BlogCategoryResource;
+use PhynixMedia\Cms\Filament\Resources\Blocks\BlockResource;
+use PhynixMedia\Cms\Filament\Resources\Blogs\BlogResource;
+use PhynixMedia\Cms\Filament\Resources\Components\ComponentResource;
+use PhynixMedia\Cms\Filament\Resources\Enquiries\EnquiryResource;
+use PhynixMedia\Cms\Filament\Resources\Layouts\LayoutResource;
+use PhynixMedia\Cms\Filament\Resources\PageVisits\PageVisitResource;
+use PhynixMedia\Cms\Filament\Resources\Pages\PageResource;
+use PhynixMedia\Cms\Filament\Resources\SeoKeywords\SeoKeywordResource;
+use PhynixMedia\Cms\Filament\Widgets\CmsOverview;
+use PhynixMedia\Cms\Filament\Widgets\VisitsChart;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;

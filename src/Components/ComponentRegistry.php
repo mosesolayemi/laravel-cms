@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Components;
+namespace PhynixMedia\Cms\Components;
 
 use InvalidArgumentException;
 

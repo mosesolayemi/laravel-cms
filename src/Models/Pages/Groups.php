@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Models\Pages;
+namespace PhynixMedia\Cms\Models\Pages;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
@@ -22,7 +22,7 @@ class Groups extends Model
     ];
 
     public function blocks(){
-        return $this->belongsTo('Cms\Models\Pages\Blocks', 'id', 'block_id');
+        return $this->belongsTo('PhynixMedia\Cms\Models\Pages\Blocks', 'id', 'block_id');
     }
 
     protected $casts = [

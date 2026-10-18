@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Content;
+namespace PhynixMedia\Cms\Content;
 
 /**
  * What every installation starts with: a blank layout, for pages that should

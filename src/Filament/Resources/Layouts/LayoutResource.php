@@ -1,13 +1,13 @@
 <?php
 
-namespace Cms\Filament\Resources\Layouts;
+namespace PhynixMedia\Cms\Filament\Resources\Layouts;
 
 use BackedEnum;
-use Cms\Filament\Resources\Layouts\Pages\CreateLayout;
-use Cms\Filament\Resources\Layouts\Pages\EditLayout;
-use Cms\Filament\Resources\Layouts\Pages\ListLayouts;
-use Cms\Filament\Resources\Layouts\Schemas\LayoutForm;
-use Cms\Models\Pages\Layouts;
+use PhynixMedia\Cms\Filament\Resources\Layouts\Pages\CreateLayout;
+use PhynixMedia\Cms\Filament\Resources\Layouts\Pages\EditLayout;
+use PhynixMedia\Cms\Filament\Resources\Layouts\Pages\ListLayouts;
+use PhynixMedia\Cms\Filament\Resources\Layouts\Schemas\LayoutForm;
+use PhynixMedia\Cms\Models\Pages\Layouts;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;

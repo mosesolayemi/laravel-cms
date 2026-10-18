@@ -1,17 +1,17 @@
 <?php
 
-namespace Cms\Filament\Resources\Assets;
+namespace PhynixMedia\Cms\Filament\Resources\Assets;
 
 use BackedEnum;
 use Closure;
-use Cms\Filament\Resources\Assets\Pages\ManageAssets;
-use Cms\Filament\Resources\Components\ComponentResource;
-use Cms\Filament\Resources\Layouts\LayoutResource;
-use Cms\Filament\Resources\Pages\PageResource;
-use Cms\Filament\Support\CmsFields;
-use Cms\Models\Assets\Asset;
-use Cms\Models\Components\Component;
-use Cms\Models\Pages\Templates;
+use PhynixMedia\Cms\Filament\Resources\Assets\Pages\ManageAssets;
+use PhynixMedia\Cms\Filament\Resources\Components\ComponentResource;
+use PhynixMedia\Cms\Filament\Resources\Layouts\LayoutResource;
+use PhynixMedia\Cms\Filament\Resources\Pages\PageResource;
+use PhynixMedia\Cms\Filament\Support\CmsFields;
+use PhynixMedia\Cms\Models\Assets\Asset;
+use PhynixMedia\Cms\Models\Components\Component;
+use PhynixMedia\Cms\Models\Pages\Templates;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;

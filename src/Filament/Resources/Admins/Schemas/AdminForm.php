@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Filament\Resources\Admins\Schemas;
+namespace PhynixMedia\Cms\Filament\Resources\Admins\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;

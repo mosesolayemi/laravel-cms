@@ -1,9 +1,9 @@
 <?php
 
-namespace Cms\Publishing;
+namespace PhynixMedia\Cms\Publishing;
 
-use Cms\Components\ComponentRegistry;
-use Cms\Models\Components\Component;
+use PhynixMedia\Cms\Components\ComponentRegistry;
+use PhynixMedia\Cms\Models\Components\Component;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;

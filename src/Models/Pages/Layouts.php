@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Models\Pages;
+namespace PhynixMedia\Cms\Models\Pages;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
@@ -49,7 +49,7 @@ class Layouts extends Model
     ];
 
     public function templates(){
-        return $this->hasMany('Cms\Models\Pages\Templates', 'layout_id', 'id');
+        return $this->hasMany('PhynixMedia\Cms\Models\Pages\Templates', 'layout_id', 'id');
     }
 
     /**

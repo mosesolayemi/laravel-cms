@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Models\Pages;
+namespace PhynixMedia\Cms\Models\Pages;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;

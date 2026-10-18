@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Content;
+namespace PhynixMedia\Cms\Content;
 
 /**
  * A set of components, layouts and page content to load into the CMS.

@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Filament\Actions;
+namespace PhynixMedia\Cms\Filament\Actions;
 
-use Cms\Preview\PreviewStore;
+use PhynixMedia\Cms\Preview\PreviewStore;
 use Filament\Actions\Action;
 use Filament\Schemas\Components\Component;
 use Filament\Support\Enums\Width;

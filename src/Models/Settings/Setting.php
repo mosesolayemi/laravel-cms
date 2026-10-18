@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Models\Settings;
+namespace PhynixMedia\Cms\Models\Settings;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;

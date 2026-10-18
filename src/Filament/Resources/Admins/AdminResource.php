@@ -1,13 +1,13 @@
 <?php
 
-namespace Cms\Filament\Resources\Admins;
+namespace PhynixMedia\Cms\Filament\Resources\Admins;
 
-use Cms\Filament\Resources\Admins\Pages\CreateAdmin;
-use Cms\Filament\Resources\Admins\Pages\EditAdmin;
-use Cms\Filament\Resources\Admins\Pages\ListAdmins;
-use Cms\Filament\Resources\Admins\Schemas\AdminForm;
-use Cms\Filament\Resources\Admins\Tables\AdminsTable;
-use Cms\Auth\Models\Admin;
+use PhynixMedia\Cms\Filament\Resources\Admins\Pages\CreateAdmin;
+use PhynixMedia\Cms\Filament\Resources\Admins\Pages\EditAdmin;
+use PhynixMedia\Cms\Filament\Resources\Admins\Pages\ListAdmins;
+use PhynixMedia\Cms\Filament\Resources\Admins\Schemas\AdminForm;
+use PhynixMedia\Cms\Filament\Resources\Admins\Tables\AdminsTable;
+use PhynixMedia\Cms\Auth\Models\Admin;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

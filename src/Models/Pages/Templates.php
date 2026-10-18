@@ -1,6 +1,6 @@
 <?php
 
-namespace Cms\Models\Pages;
+namespace PhynixMedia\Cms\Models\Pages;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
@@ -39,11 +39,11 @@ class Templates extends Model
     ];
 
     public function blocks(){
-        return $this->hasMany('Cms\Models\Pages\Blocks', 'template_id', 'id');
+        return $this->hasMany('PhynixMedia\Cms\Models\Pages\Blocks', 'template_id', 'id');
     }
 
     public function layouts(){
-        return $this->hasOne('Cms\Models\Pages\Layouts', 'id', 'layout_id');
+        return $this->hasOne('PhynixMedia\Cms\Models\Pages\Layouts', 'id', 'layout_id');
     }
 
     /**
@@ -67,12 +67,12 @@ class Templates extends Model
     
     // with the block method, query the groups table
     public function groups(){
-        return $this->hasManyThrough('Cms\Models\Pages\Groups', 'Cms\Models\Pages\Blocks', 'template_id', 'block_id', 'id', 'id');
+        return $this->hasManyThrough('PhynixMedia\Cms\Models\Pages\Groups', 'PhynixMedia\Cms\Models\Pages\Blocks', 'template_id', 'block_id', 'id', 'id');
     }
 
     // meta keyword
     public function metakeywords(){
-        return $this->hasOne('Cms\Models\Pages\SeoKeyword', 'id', 'seo_keyword_id');
+        return $this->hasOne('PhynixMedia\Cms\Models\Pages\SeoKeyword', 'id', 'seo_keyword_id');
     }
 
     /**
