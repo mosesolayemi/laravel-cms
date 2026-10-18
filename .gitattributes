@@ -1,0 +1,16 @@
+# Keep the distributed package small: a `composer require` ships src/ and
+# stubs/ and nothing else. Everything below is for people working on the
+# package, not for applications installing it.
+/.gitattributes   export-ignore
+/.github/         export-ignore
+/.editorconfig    export-ignore
+/phpunit.xml      export-ignore
+/phpunit.xml.dist export-ignore
+/tests/           export-ignore
+/INTEGRATION.md   export-ignore
+
+# Treat PHP and Blade as text so diffs and line endings behave.
+*.php       text diff=php
+*.blade.php text
+*.md        text
+*.json      text

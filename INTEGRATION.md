@@ -91,50 +91,60 @@ point you want already exists — look in `src/config/cms.php` first.
 }
 ```
 
-### Install as a path repository
+### Install
 
-In the **host application's** `composer.json`:
+The package is private, distributed through Phynix Media's Private Packagist
+repository. Register the repository once per application, then require it:
 
-```json
-{
-    "repositories": [
-        { "type": "path", "url": "packages/cms", "options": { "symlink": true } }
-    ],
-    "require": {
-        "ambulance/cms": "*"
-    }
-}
+```bash
+composer config repositories.phynixmedia composer https://repo.packagist.com/phynixmedia/
+composer require phynixmedia/laravel-cms
+php artisan cms:install
 ```
 
-### Load the helpers from the host
+That is the whole installation. Composer needs credentials for the private
+repository; `composer` will prompt for them on first use and store them in
+`auth.json`.
 
-This one is easy to miss and breaks every template at once. Composer only
-autoloads the `files` entry of the **root** package, so a path-installed
-package's `helpers.php` is never loaded. Add it to the host's own autoload:
+### What `cms:install` does
 
-```json
-"autoload": {
-    "files": ["packages/cms/src/helpers.php"]
-}
-```
+Every step is safe to run again — an existing file is left alone unless
+`--force` is given, and the seeders only fill in what is missing.
 
-Then `composer dump-autoload`.
+| Step | Detail |
+| --- | --- |
+| `config/cms.php` | Writes a **short** stub listing only what a site normally overrides, not the package's full config. Copying the whole file would freeze its defaults at install time, so a later package upgrade could not change any of them. |
+| `app/Cms/SiteContent.php` | An empty `ContentDefinition` to grow into, plus an `app/Cms/Components/` directory. |
+| `migrate` | Every table in §6. |
+| `storage:link` | The media disk is served through `public/storage`; without the link every uploaded image 404s silently. |
+| `cms:seed-components` | The component library, layouts and page content listed in `cms.content`. |
+| `auth:admin` | The first administrator. There is no public sign-up for the panel by design, so an installation without this has no way in. |
+
+Flags: `--force`, `--no-seed`, `--no-admin`. Under `--no-interaction` the
+migration runs with `--force` and the administrator step is skipped with a
+warning.
 
 ### Provider registration
 
 Nothing to do: `extra.laravel.providers` in the package manifest registers
-`PhynixMedia\Cms\CmsServiceProvider` by package discovery, and aliases the `Cms` facade.
+`PhynixMedia\Cms\CmsServiceProvider` by package discovery, and aliases the
+`Cms` facade.
 
 If the host disables discovery, add `PhynixMedia\Cms\CmsServiceProvider` to
 `bootstrap/providers.php` (Laravel 11+) or `config/app.php` yourself.
 
-### Finish
+### The helpers are autoloaded
 
-```bash
-php artisan migrate
-php artisan storage:link      # the media disk is served through public/storage
-php artisan auth:admin        # create the first administrator
-```
+Nothing to add to the host's `autoload.files`. Composer autoloads the `files`
+entry of **every installed package**, not just the root one, so
+`src/helpers.php` is loaded automatically. The package's seeders are PSR-4 and
+need no `classmap` entry either.
+
+(Earlier revisions of this document asked hosts to add both by hand. That was
+only true while the package was consumed as a bare path on disk rather than
+genuinely installed; following it now would load the helpers twice.)
+
+### Finish
 
 Browse to `/admin` (configurable; see `cms.panel.path`).
 
@@ -255,6 +265,15 @@ an unexpected shape.
 | `publishing.views` | `pages` | View prefix `cms:publish-page` writes to |
 | `publishing.components` | `cms-components` | Same, for `cms:publish-component` |
 
+### routing
+
+| Key | Default | Meaning |
+| --- | --- | --- |
+| `routing.pages` | `true` (env `CMS_ROUTE_PAGES`) | Register the page fallback route (§7). Set `false` once the host has its own page route |
+| `routing.home` | `home` | The page URL that `/` serves |
+| `routing.middleware` | `['web']` | |
+| `routing.match_last_segment` | `false` | Retry a failed lookup with the last path segment alone. Off by default: it lets any unmatched URL resolve to a page anywhere in the tree |
+
 ### preview
 
 | Key | Default | Meaning |
@@ -267,6 +286,7 @@ an unexpected shape.
 
 | Key | Default | Meaning |
 | --- | --- | --- |
+| `seeding.seeders` | `[]` | The host's own seeders, run by `CmsDatabaseSeeder` after the live-site guard and before the content installer (§16) |
 | `seeding.media` | `true` (env `CMS_SEED_MEDIA`) | Whether `db:seed` imports files |
 | `seeding.overwrite_live` | `false` (env `CMS_SEED_OVERWRITE`) | Run the destructive seeders on a live site anyway (§16) |
 
@@ -331,7 +351,7 @@ can tell "still the theme's file" from "an editor replaced it" (§13).
 ## 7. How a page is served
 
 ```
-request  →  host route  →  PageController  →  Cms::page($url)
+request  →  route       →  PageController  →  Cms::page($url)
                                            →  status check (404 if not 1)
                                            →  Cms::recordVisit($url)
                                            →  Cms::render($page)
@@ -341,22 +361,45 @@ request  →  host route  →  PageController  →  Cms::page($url)
                                      view('cms::page') @extends($shell)
 ```
 
-### The host route
+### The package's fallback route
 
-The package deliberately registers **no** catch-all. The host owns its URL
-space. A typical arrangement:
+Out of the box the package registers a `Route::fallback()` to
+`PhynixMedia\Cms\Http\Controllers\PageController`, so a fresh installation
+serves its pages with nothing added to `routes/web.php`.
+
+Because Laravel reaches a fallback only after **every** real route has failed,
+this needs no exclusion list: the panel and preview paths are real routes, so
+they are matched before it. Pages are looked up by their full path
+(`services/pricing`), and `/` maps to `cms.routing.home`.
+
+Two things to know:
+
+- Laravel's `fallback()` registers for `GET` only, so an unmatched `POST` now
+  answers **405** where an application with no catch-all would answer 404.
+- `cms.routing.match_last_segment` makes a failed lookup retry with the last
+  path segment alone. It is **off** by default: it lets any unmatched URL
+  resolve to a page anywhere in the tree, so two URLs serve one page.
+
+### Using your own route instead
+
+An application that wants its own behaviour — a staging gate, reserved
+prefixes, extra segments — defines a real route, which wins automatically:
 
 ```php
 // routes/web.php — after every explicit route
+$reserved = '^(?!admin|blogs|cms|api|storage|livewire|filament).*$';
+
 Route::get('/', [PageController::class, 'show']);
 Route::get('/{page}', [PageController::class, 'show'])->where('page', $reserved);
 Route::get('/{page}/{sub}', [PageController::class, 'show'])->where('page', $reserved);
-Route::get('/{page}/{sub}/{extra}', [PageController::class, 'show'])->where('page', $reserved);
 ```
 
 `$reserved` is a regex excluding anything the app serves itself — and it **must
 exclude `cms.panel.path` and `cms.preview.path`**, or the panel and previews
 become 404 pages.
+
+Then set `cms.routing.pages` to `false`, so the fallback stops shadowing the
+404 behaviour your own routes imply.
 
 ### The controller
 
@@ -824,19 +867,40 @@ for confirmation in an interactive terminal.
 
 ### The seeder chain
 
-`CmsDatabaseSeeder` calls, in order:
+`CmsDatabaseSeeder` takes the live-site reading, then calls, in order:
 
-1. `WebPageLayoutSeeder` — layouts must exist before pages point at them
-2. `WebPageTemplateSeeder` — pages
-3. `MenuSeeder` — places pages in the menus, so pages must already exist
-4. `CmsContentSeeder` — fills in what the layouts and pages are made of
+1. Everything listed in `cms.seeding.seeders` — the host's own pages, layouts
+   and menus, in the order the host lists them
+2. `CmsContentSeeder` — fills in what those layouts and pages are made of
 
-Call it from the host's `DatabaseSeeder`.
+Call it from the host's `DatabaseSeeder`:
+
+```php
+use PhynixMedia\Cms\Database\Seeders\CmsDatabaseSeeder;
+
+$this->call(CmsDatabaseSeeder::class);
+```
+
+The host's seeders go through config rather than being called directly because
+this is the only order that works: their rows must exist before the content
+installer can fill them, and the guard must already have taken its reading.
+A typical set, in dependency order:
+
+```php
+// config/cms.php
+'seeding' => [
+    'seeders' => [
+        WebPageLayoutSeeder::class,   // layouts first: pages point at them
+        WebPageTemplateSeeder::class, // then the pages
+        MenuSeeder::class,            // then their place in the menus
+    ],
+],
+```
 
 ### CmsSeedGuard
 
-The first three are destructive — they reset page settings and menus to what
-the code says. They stand aside when **all three** hold:
+Seeders that reset page settings or menus to what the code says are
+destructive on a live site. They stand aside when **all three** hold:
 
 ```php
 $existingSite                                  // the site already has pages
@@ -856,6 +920,7 @@ edits. Set `APP_ENV=production` on live servers.
 
 | Command | Does |
 | --- | --- |
+| `php artisan cms:install` | Install into a fresh application: config and `app/Cms` stubs, `migrate`, `storage:link`, seed, first administrator. `--force`, `--no-seed`, `--no-admin`. Safe to re-run. |
 | `php artisan auth:admin` | Create an administrator. Options `--firstname --lastname --email --password` for unattended setup; prompts otherwise. |
 | `php artisan cms:seed-components` | Install `cms.content`. `--only=components\|layouts\|pages` (repeatable), `--force`. Checks the tables exist first. |
 | `php artisan cms:publish-page {url}*` | Publish pages to Blade (§15) |
@@ -967,23 +1032,28 @@ The host adds its own screens through `cms.panel.resources`, `.pages`,
 
 For a new Laravel application:
 
-1. **Copy the package** to `packages/cms`.
-2. **composer.json** — add the path repository, require `ambulance/cms`, and
-   add `packages/cms/src/helpers.php` to the host's `autoload.files`.
-   `composer dump-autoload`.
-3. **`php artisan migrate`** — creates every table in §6.
-4. **`php artisan storage:link`**.
-5. **`php artisan auth:admin`** — first administrator.
-6. **Write a shell** (§8) and point `cms.rendering.shell` at it.
-7. **Write component types** for the theme's sections and list them in
-   `cms.components.types`.
-8. **Add the page route** (§7), excluding the panel and preview paths.
-9. **Declare shared settings** in `cms.settings.sections` if the site has any.
-10. **Write a `ContentDefinition`** and list it in `cms.content`, so a fresh
-    checkout can rebuild the site with `cms:seed-components`.
-11. **Call `CmsDatabaseSeeder`** from the host's `DatabaseSeeder`.
-12. **Set `APP_ENV=production` on live servers** so `CmsSeedGuard` protects
-    panel edits.
+```bash
+composer config repositories.phynixmedia composer https://repo.packagist.com/phynixmedia/
+composer require phynixmedia/laravel-cms
+php artisan cms:install
+```
+
+That is a working CMS: migrated, seeded, an administrator created, pages served
+through the package's fallback route, rendering in the package's own shell.
+
+Everything below is customisation — none of it is needed to get running, and
+each piece can wait until you want it.
+
+| Want | Do |
+| --- | --- |
+| Your own theme around pages | Write a shell (§8) and point `cms.rendering.shell` at it. |
+| Your site's own sections | Write component types (§10) and list them in `cms.components.types`. |
+| Your own page routing | Define a real route (§7). It beats the fallback automatically; set `cms.routing.pages` to `false` once you have one. |
+| Shared values edited in one place | Declare them in `cms.settings.sections` (§12). |
+| A fresh checkout to rebuild the site | Fill in `app/Cms/SiteContent.php` (§16); it is already listed in `cms.content`. |
+| Your pages, layouts and menus seeded | Write seeders and list them in `cms.seeding.seeders`. `CmsDatabaseSeeder` runs them after the live-site guard and before the content installer. |
+| Screens for your own content | List Filament resources and pages in `cms.panel.resources` / `cms.panel.pages` (§21). |
+| Panel edits protected on a live site | Set `APP_ENV=production`, which is what arms `CmsSeedGuard`. |
 
 ---
 
@@ -1005,8 +1075,9 @@ For a new Laravel application:
 - `Setting::allSettings()` is cached forever. Write through the model, or call
   `Setting::flush()`.
 - `CmsSeedGuard` only protects when `APP_ENV=production`.
-- After adding classmap seeders, run `composer dump-autoload` before
-  `db:seed`.
+- Host seeders in `database/seeds` are classmap autoloaded, so run
+  `composer dump-autoload` after adding one, before `db:seed`. The package's
+  own seeders are PSR-4 and do not have this problem.
 - Image uploads need the configured driver, a writable disk and the storage
   symlink.
 - Deleting a published Blade file silently returns the page to panel content —
@@ -1030,6 +1101,6 @@ For a new Laravel application:
 | Media | `src/Support/Media.php`, `src/Media/ImageProcessor.php` |
 | Previews | `src/Http/Controllers/PreviewController.php`, `src/Preview/PreviewStore.php`, `src/routes/web.php` |
 | Publishing | `src/Publishing/`, `src/Console/Publish*Command.php` |
-| Seeding | `src/Content/`, `src/database/seeds/` |
+| Seeding | `src/Content/`, `src/Database/Seeders/` |
 | Models | `src/Models/` |
 | Migrations | `src/database/migrations/` |

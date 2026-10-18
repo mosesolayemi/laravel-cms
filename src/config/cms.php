@@ -312,7 +312,7 @@ return [
         'middleware' => ['web'],
 
         /*
-         * Pages are looked up by their full path ('vehicles/ambulances').
+         * Pages are looked up by their full path ('services/pricing').
          * Turn this on if the site keys them by the last segment instead —
          * at the cost of any unmatched URL being able to resolve to a page
          * anywhere in the tree.

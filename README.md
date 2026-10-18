@@ -1,17 +1,66 @@
-# CMS package
+# Laravel CMS
 
-A self-contained content management system: content models, its own
-administrator guard, and a Filament back office.
+A self-contained content management system for Laravel: content models, a page
+builder, its own administrator guard, and a [Filament](https://filamentphp.com)
+back office.
 
-The package owns everything the back office needs. A host application
-registers one provider and gets a working panel; nothing about the CMS leaks
-into the host's `config/auth.php`, routes or controllers.
+Two commands and you have a working CMS. The package owns everything the back
+office needs — its guard, its panel, its migrations, its routes — so nothing
+leaks into your `config/auth.php`, your routes or your controllers.
 
-> **Integrating this into another application?** Read
-> **[INTEGRATION.md](INTEGRATION.md)** — the full reference: installation, every
-> configuration key, the database schema, how a page is served, the component
-> contract, settings and tokens, media, previews, publishing, seeding, every
-> command, and the invariants that bite. This README is the short tour.
+## Install
+
+This is a private package, distributed through Phynix Media's Private
+Packagist repository. Add it once per application:
+
+```bash
+composer config repositories.phynixmedia composer https://repo.packagist.com/phynixmedia/
+composer require phynixmedia/laravel-cms
+php artisan cms:install
+```
+
+`cms:install` migrates, links the storage disk, writes a short `config/cms.php`
+and an `app/Cms/SiteContent.php` to grow into, and creates your first
+administrator. It is safe to run again.
+
+Then browse to `/admin`.
+
+## What you get
+
+- **Pages and layouts** — built from components in the panel, rendered inside
+  a Blade shell you control.
+- **A component library** — reusable sections, placed on any page or dropped
+  into a Blade view with `@cmsComponent('handle')`.
+- **Your own component types** — a PHP class pairing Filament fields with a
+  Blade view. A type registered under a handle the package ships replaces the
+  package's, so you can re-skin `rich-text` without forking anything.
+- **Shared settings** — described in config, edited on one screen, read
+  anywhere with `setting()`.
+- **An asset library** with image processing, previews of unsaved changes,
+  a blog, enquiries and visit counts.
+- **Content as code** — a `ContentDefinition` seeds the whole site, so a fresh
+  checkout rebuilds it with one command.
+
+The package ships no site content of its own. Pages, menus and themed sections
+belong to your application; the CMS is the machinery underneath.
+
+## Documentation
+
+**[INTEGRATION.md](INTEGRATION.md)** is the full reference: every
+configuration key, the database schema, how a page is served, the component
+contract, settings and tokens, media, previews, publishing, seeding, every
+command, and the invariants that bite. The rest of this README is the short
+tour.
+
+## Requirements
+
+PHP 8.2+, Laravel 12, Filament 5.
+
+## License
+
+Proprietary. Copyright © Phynix Media. See [LICENSE](LICENSE) — this package is
+licensed for use by Phynix Media and its clients, and is not for
+redistribution.
 
 ## Layout
 
@@ -52,21 +101,16 @@ src/
   config/cms.php
 ```
 
-## Install into a host app
+## Serving pages
 
-1. Autoload it — in the host's `composer.json`:
+A fresh installation serves its pages through the package's fallback route, so
+there is nothing to add to `routes/web.php`. Pages are looked up by their full
+path, and an unpublished page is a 404 to visitors.
 
-   ```json
-   "autoload": { "psr-4": { "PhynixMedia\\Cms\\": "packages/cms/src" } }
-   ```
-
-2. Register the provider in `config/app.php`:
-
-   ```php
-   PhynixMedia\Cms\CmsServiceProvider::class,
-   ```
-
-3. `php artisan migrate` then `php artisan auth:admin`.
+An application that wants its own behaviour — a staging gate, reserved
+prefixes, a different slug scheme — defines a real route instead. Laravel only
+reaches a fallback once every real route has failed, so your route simply
+wins. Set `cms.routing.pages` to `false` once you have one.
 
 The panel is served from `/admin`; change it with `CMS_PANEL_PATH` in `.env`.
 
@@ -126,72 +170,68 @@ in EXIF rather than in the pixels) do not come out sideways.
 
 ## Seeding
 
-A seeder lives wherever its table's migration lives. The CMS owns
-`web_page_layouts` and `web_page_templates`, so seeding pages, layouts and
-menu placement is this package's job:
+The package ships no content of its own, so what it seeds is only the
+machinery:
 
 ```
-packages/cms/src/database/seeds/
-  CmsDatabaseSeeder.php      calls the four below, in order
-  WebPageLayoutSeeder.php    the default layout's row
-  WebPageTemplateSeeder.php  the pages themselves
-  MenuSeeder.php             which pages appear in which menu, and where
-  CmsContentSeeder.php       what layouts and pages are made of (see
-                             "Seeding content" below)
-  CmsAssetSeeder.php         lists files already on the media disk as assets
-                             (call it last, after anything that adds files)
-  CmsSeedGuard.php           keeps the seeders that reset content to the code
-                             from overwriting a live site (see below)
+src/Database/Seeders/
+  CmsDatabaseSeeder.php   the host's seeders, then the content installer
+  CmsContentSeeder.php    what layouts and pages are made of (see
+                          "Seeding content" below)
+  CmsAssetSeeder.php      lists files already on the media disk as assets
+                          (call it last, after anything that adds files)
+  CmsSeedGuard.php        keeps the seeders that reset content to the code
+                          from overwriting a live site (see below)
 ```
 
-They are classmap autoloaded, matching the host's own `database/seeds`, so the
-host adds the folder to composer.json alongside its own:
-
-```json
-"classmap": [
-    "database/seeds",
-    "database/factories",
-    "packages/cms/src/database/seeds"
-]
-```
-
-The host then calls one seeder:
+These are PSR-4, so there is no `classmap` entry to add. The host calls one
+seeder:
 
 ```php
 // database/seeds/DatabaseSeeder.php
+use PhynixMedia\Cms\Database\Seeders\CmsDatabaseSeeder;
+
 $this->call(CmsDatabaseSeeder::class);
 ```
 
-Or run one directly:
+### Your own pages, layouts and menus
 
-```
-php artisan db:seed --class='\MenuSeeder'
-```
-
-Note the leading backslash — Laravel prefixes a `--class` containing no
-backslash with `Database\Seeders\`, which is not where these live.
-
-Anything whose migration is in the host application — this site's gallery, for
-instance — is seeded from the host's own `database/seeds`.
-
-On production, once the site has pages, `WebPageLayoutSeeder`,
-`WebPageTemplateSeeder` and `MenuSeeder` skip themselves (they reset page
-settings and menus to the code, which would undo panel edits) and say so.
-The reading is taken once at the start of a run, so a first deploy still
-seeds everything. A host seeder that overwrites panel edits can opt in:
+The pages and menus that make up a particular site are that site's content,
+not the package's, so they live in the host's own seeders and are listed in
+config:
 
 ```php
-if (CmsSeedGuard::protects('GalleryCategorySeeder', $this->command)) {
+// config/cms.php
+'seeding' => [
+    'seeders' => [
+        WebPageLayoutSeeder::class,   // layouts first: pages point at them
+        WebPageTemplateSeeder::class, // then the pages
+        MenuSeeder::class,            // then their place in the menus
+    ],
+],
+```
+
+`CmsDatabaseSeeder` runs them after the live-site guard has taken its reading
+and before the content installer fills those pages in — which is the only
+order that works, and the reason they go through config rather than being
+called directly.
+
+### Not overwriting a live site
+
+On production, once the site has pages, a seeder that would reset page
+settings or menus to the code can stand aside:
+
+```php
+if (CmsSeedGuard::protects('WebPageTemplateSeeder', $this->command)) {
     return;
 }
 ```
 
-`CMS_SEED_OVERWRITE=true` (`cms.seeding.overwrite_live`) runs them anyway;
-`CMS_SEED_MEDIA=false` (`cms.seeding.media`) skips file imports.
+The reading is taken once at the start of a run, so a first deploy still seeds
+everything. `CMS_SEED_OVERWRITE=true` (`cms.seeding.overwrite_live`) runs them
+anyway; `CMS_SEED_MEDIA=false` (`cms.seeding.media`) skips file imports.
 
-Each seeder checks what it needs before it runs and says what is missing:
-MenuSeeder names any page it could not place rather than quietly leaving a
-link out of the menu.
+The guard only arms itself when `APP_ENV=production`.
 
 ## Administrators
 
