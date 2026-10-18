@@ -7,7 +7,9 @@
 /phpunit.xml      export-ignore
 /phpunit.xml.dist export-ignore
 /tests/           export-ignore
-/INTEGRATION.md   export-ignore
+
+# INTEGRATION.md deliberately ships: the README links to it, and a dead link
+# in every vendor/ copy costs more than the file does.
 
 # Treat PHP and Blade as text so diffs and line endings behave.
 *.php       text diff=php
