@@ -83,6 +83,21 @@ check('config/cms.php published', fn (): bool => is_file($app . '/config/cms.php
 check('app/Cms/SiteContent.php published', fn (): bool => is_file($app . '/app/Cms/SiteContent.php'));
 check('app/Cms/Components/ created', fn (): bool => is_dir($app . '/app/Cms/Components'));
 check('public/storage linked', fn (): bool => is_link($app . '/public/storage'));
+
+/*
+ * The panel's stylesheet. Without it /admin still answers 200 and renders
+ * every field, as unstyled HTML — so an HTTP check alone never notices.
+ */
+check('Filament assets published', function () use ($app) {
+    $css = glob($app . '/public/css/filament/*/*.css') ?: [];
+    $js = glob($app . '/public/js/filament/*/*.js') ?: [];
+
+    if ($css === [] || $js === []) {
+        throw new RuntimeException('public/css/filament or public/js/filament is empty — the panel would render unstyled');
+    }
+
+    return count($css) . ' css, ' . count($js) . ' js';
+});
 check('config merged from the package', fn () => config('cms.images.presets') ? 'presets: ' . implode(', ', array_keys(config('cms.images.presets'))) . '; media disk: ' . config('cms.media.disk') : false);
 check('a layout was seeded', fn () => DB::table('web_page_layouts')->count() > 0 ? DB::table('web_page_layouts')->count() . ' row(s)' : false);
 check('an administrator exists', fn () => DB::table('admins')->count() > 0 ? DB::table('admins')->value('email') : false);

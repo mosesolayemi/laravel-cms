@@ -195,12 +195,26 @@ for version in "${VERSIONS[@]}"; do
     check "cms:install is safe to re-run" \
         php "$app/artisan" cms:install --no-interaction --no-admin
 
-    if php "$app/artisan" auth:admin \
+    admin_output=$(php "$app/artisan" auth:admin \
         --firstname=Install --lastname=Test \
-        --email="$ADMIN_EMAIL" --password="$ADMIN_PASSWORD" >/dev/null 2>&1; then
+        --email="$ADMIN_EMAIL" --password="$ADMIN_PASSWORD" 2>&1)
+
+    if [ $? -eq 0 ]; then
         ok "auth:admin created an administrator" "$ADMIN_EMAIL"
+    elif printf '%s' "$admin_output" | grep -q 'already been taken'; then
+        # Only under --reuse, where the previous run left this administrator
+        # behind. Refusing the duplicate is the correct behaviour.
+        ok "auth:admin kept the existing administrator" "$ADMIN_EMAIL"
     else
-        fail "auth:admin failed"
+        fail "auth:admin failed" "$(printf '%s' "$admin_output" | tail -1)"
+    fi
+
+    # A short password must be refused rather than stored.
+    if php "$app/artisan" auth:admin --firstname=Too --lastname=Short \
+        --email="short-$ADMIN_EMAIL" --password=abc >/dev/null 2>&1; then
+        fail "auth:admin accepted a 3-character password"
+    else
+        ok "auth:admin refuses a short password"
     fi
 
     if php "$app/artisan" route:list 2>/dev/null | grep -q 'cms.page'; then
@@ -232,6 +246,26 @@ for version in "${VERSIONS[@]}"; do
                 fail "GET $path" "expected 200, got ${status:-no response} — see $WORK_DIR/serve-$version.log"
             fi
         done
+
+        # The panel's stylesheet, fetched exactly as the browser asks for it.
+        # /admin/login answers 200 whether or not this file exists, so the
+        # status code above cannot tell a styled panel from a bare one.
+        stylesheet=$(curl -s "http://127.0.0.1:$port/admin/login" \
+            | grep -oE "http://127.0.0.1:$port/css/filament[^\"?]*" | head -1)
+
+        if [ -z "$stylesheet" ]; then
+            fail "the login page links no Filament stylesheet"
+        else
+            css_status=$(curl -s -o /dev/null -w '%{http_code}' "$stylesheet")
+            css_bytes=$(curl -s -o /dev/null -w '%{size_download}' "$stylesheet")
+
+            if [ "$css_status" = "200" ] && [ "${css_bytes:-0}" -gt 1000 ]; then
+                ok "the panel stylesheet loads" "$css_bytes bytes"
+            else
+                fail "the panel stylesheet is missing" \
+                     "HTTP $css_status — run php artisan filament:assets; the panel renders unstyled"
+            fi
+        fi
 
         cleanup
     fi
