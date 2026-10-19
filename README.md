@@ -10,11 +10,7 @@ leaks into your `config/auth.php`, your routes or your controllers.
 
 ## Install
 
-This is a private package, distributed through Phynix Media's Private
-Packagist repository. Add it once per application:
-
 ```bash
-composer config repositories.mosesolayemi composer https://repo.packagist.com/mosesolayemi/
 composer require mosesolayemi/laravel-cms
 php artisan cms:install
 ```
@@ -71,9 +67,7 @@ Laravel app on each supported major. See **[tests/README.md](tests/README.md)**
 
 ## License
 
-Proprietary. Copyright © Phynix Media. See [LICENSE](LICENSE) — this package is
-licensed for use by Phynix Media and its clients, and is not for
-redistribution.
+MIT. Copyright © Phynix Media. See [LICENSE](LICENSE).
 
 ## Layout
 

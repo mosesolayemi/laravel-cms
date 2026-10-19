@@ -94,18 +94,14 @@ point you want already exists — look in `src/config/cms.php` first.
 
 ### Install
 
-The package is private, distributed through Phynix Media's Private Packagist
-repository. Register the repository once per application, then require it:
-
 ```bash
-composer config repositories.mosesolayemi composer https://repo.packagist.com/mosesolayemi/
 composer require mosesolayemi/laravel-cms
 php artisan cms:install
 ```
 
-That is the whole installation. Composer needs credentials for the private
-repository; `composer` will prompt for them on first use and store them in
-`auth.json`.
+That is the whole installation. The package is on
+[Packagist](https://packagist.org/packages/mosesolayemi/laravel-cms), so there
+is no repository to register and no credential to supply.
 
 ### What `cms:install` does
 
@@ -1034,7 +1030,6 @@ The host adds its own screens through `cms.panel.resources`, `.pages`,
 For a new Laravel application:
 
 ```bash
-composer config repositories.mosesolayemi composer https://repo.packagist.com/mosesolayemi/
 composer require mosesolayemi/laravel-cms
 php artisan cms:install
 ```

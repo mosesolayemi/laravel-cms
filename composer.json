@@ -10,7 +10,7 @@
         "content-management"
     ],
     "homepage": "https://github.com/mosesolayemi/laravel-cms",
-    "license": "proprietary",
+    "license": "MIT",
     "authors": [
         {
             "name": "Phynix Media",
